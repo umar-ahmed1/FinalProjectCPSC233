@@ -11,10 +11,12 @@ public class Main extends Application {
 	public void start(Stage primaryStage) {
 		try {
 			BorderPane root = new BorderPane();
+			
+			//set the primary stage
 			Scene scene = new Scene(root,400,400);
 			primaryStage.setScene(scene);
 			primaryStage.setTitle("Umars final project");
-			primaryStage.show();
+			primaryStage.show(); 
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
