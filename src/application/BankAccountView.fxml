@@ -1,8 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox xmlns:fx="http://javafx.com/fxml/1">
-	<!-- TODO Add Nodes -->
+<VBox prefHeight="400.0" prefWidth="400.0" style="-fx-background-color: #1c2e4a;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Label alignment="CENTER" prefHeight="27.0" prefWidth="132.0" text="Umar's Bank" textFill="WHITE">
+         <VBox.margin>
+            <Insets bottom="25.0" left="130.0" />
+         </VBox.margin>
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <Label text="Username" textFill="WHITE">
+         <VBox.margin>
+            <Insets left="100.0" />
+         </VBox.margin>
+      </Label>
+      <TextField>
+         <VBox.margin>
+            <Insets left="100.0" right="100.0" />
+         </VBox.margin>
+      </TextField>
+      <Label text="Password" textFill="WHITE">
+         <VBox.margin>
+            <Insets left="100.0" />
+         </VBox.margin>
+      </Label>
+      <TextField>
+         <VBox.margin>
+            <Insets left="100.0" right="100.0" />
+         </VBox.margin>
+      </TextField>
+      <Label text="Initial Deposit " textFill="WHITE">
+         <VBox.margin>
+            <Insets left="100.0" />
+         </VBox.margin>
+      </Label>
+      <TextField>
+         <VBox.margin>
+            <Insets left="100.0" right="100.0" />
+         </VBox.margin>
+      </TextField>
+      <Button mnemonicParsing="false" prefHeight="43.0" prefWidth="202.0" text="Signup ">
+         <VBox.margin>
+            <Insets left="100.0" top="10.0" />
+         </VBox.margin>
+      </Button>
+   </children>
 </VBox>
-
