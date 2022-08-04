@@ -17,7 +17,7 @@
             <Font size="18.0" />
          </font>
       </Label>
-      <Label text="Username" textFill="WHITE">
+      <Label fx:id="usernameLoginField" text="Username" textFill="WHITE">
          <VBox.margin>
             <Insets left="100.0" />
          </VBox.margin>
@@ -27,7 +27,7 @@
             <Insets left="100.0" right="100.0" />
          </VBox.margin>
       </TextField>
-      <Label text="Password" textFill="WHITE">
+      <Label fx:id="passwordLoginField" text="Password" textFill="WHITE">
          <VBox.margin>
             <Insets left="100.0" />
          </VBox.margin>
