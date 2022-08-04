@@ -18,7 +18,7 @@ public class Main extends Application {
 			VBox root = loader.load(new FileInputStream("src/application/BankAccountView.fxml"));
 			//create the controller so it can modify the stage, set the starting stage to primaryStage
 			BankAccountController controller = (BankAccountController) loader.getController();
-			//controller.applicationStage = primaryStage;
+			controller.applicationStage = primaryStage;
 			//set the primary stage
 			Scene scene = new Scene(root,400,400);
 			primaryStage.setScene(scene);

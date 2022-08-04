@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox prefHeight="400.0" prefWidth="400.0" style="-fx-background-color: #1c2e4a;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<VBox prefHeight="400.0" prefWidth="400.0" style="-fx-background-color: #1c2e4a;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.BankAccountController">
    <children>
       <Label alignment="CENTER" prefHeight="27.0" prefWidth="132.0" text="Umar's Bank" textFill="WHITE">
          <VBox.margin>
@@ -17,27 +17,27 @@
             <Font size="18.0" />
          </font>
       </Label>
-      <Label fx:id="usernameLoginField" text="Username" textFill="WHITE">
+      <Label text="Username" textFill="WHITE">
          <VBox.margin>
             <Insets left="100.0" />
          </VBox.margin>
       </Label>
-      <TextField>
+      <TextField fx:id="usernameLoginField">
          <VBox.margin>
             <Insets left="100.0" right="100.0" />
          </VBox.margin>
       </TextField>
-      <Label fx:id="passwordLoginField" text="Password" textFill="WHITE">
+      <Label text="Password" textFill="WHITE">
          <VBox.margin>
             <Insets left="100.0" />
          </VBox.margin>
       </Label>
-      <TextField>
+      <TextField fx:id="passwordLoginField">
          <VBox.margin>
             <Insets left="100.0" right="100.0" />
          </VBox.margin>
       </TextField>
-      <Button alignment="CENTER" mnemonicParsing="false" onAction="#loginButton" prefHeight="25.0" prefWidth="100.0" text="Login">
+      <Button alignment="CENTER" mnemonicParsing="false" onAction="#loginButtonPressed" prefHeight="25.0" prefWidth="100.0" text="Login">
          <opaqueInsets>
             <Insets />
          </opaqueInsets>
@@ -45,7 +45,7 @@
             <Insets bottom="1.0" left="150.0" right="100.0" top="10.0" />
          </VBox.margin>
       </Button>
-      <Label fx:id="usernameLoginField1" text="Don't have an account? " textFill="WHITE">
+      <Label text="Don't have an account? " textFill="WHITE">
          <VBox.margin>
             <Insets left="75.0" top="50.0" />
          </VBox.margin>
@@ -53,7 +53,7 @@
             <Insets left="60.0" />
          </padding>
       </Label>
-      <Button alignment="CENTER" mnemonicParsing="false" onAction="#registerButton" prefHeight="25.0" prefWidth="100.0" text="Register Now">
+      <Button alignment="CENTER" mnemonicParsing="false" onAction="#registerButtonPressed" prefHeight="25.0" prefWidth="100.0" text="Register Now">
          <opaqueInsets>
             <Insets />
          </opaqueInsets>
