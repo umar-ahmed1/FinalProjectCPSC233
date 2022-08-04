@@ -37,20 +37,7 @@
             <Insets left="100.0" right="100.0" />
          </VBox.margin>
       </TextField>
-      <Label text="Initial Deposit " textFill="WHITE">
-         <VBox.margin>
-            <Insets left="100.0" />
-         </VBox.margin>
-      </Label>
-      <TextField>
-         <VBox.margin>
-            <Insets left="100.0" right="100.0" />
-         </VBox.margin>
-      </TextField>
-      <Button mnemonicParsing="false" prefHeight="43.0" prefWidth="202.0" text="Signup ">
-         <VBox.margin>
-            <Insets left="100.0" top="10.0" />
-         </VBox.margin>
-      </Button>
+      
+
    </children>
 </VBox>
