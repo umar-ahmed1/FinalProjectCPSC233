@@ -8,9 +8,9 @@ public class Account {
 	
 	//Default constructor
 	public Account(double balanceInput,String usernameInput, String passwordInput) {
-		setBalance(balanceInput);
+		balance = balanceInput;
 		username = usernameInput;
-		setPassword(passwordInput);
+		password = passwordInput;
 	}
 
 	//Getter and setter for password 

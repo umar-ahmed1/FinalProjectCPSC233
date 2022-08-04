@@ -15,7 +15,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-public class BankAccountController {
+public class RegisterSceneController {
 	Stage applicationStage;
 	Scene loginScene;
 	Scene registerScene;
@@ -44,12 +44,13 @@ public class BankAccountController {
      * @return ?
      */
 	@FXML
-	void registerButtonPressedLoginScene(ActionEvent swapToRegisterLayout) throws IOException {
-		FXMLLoader loader = new FXMLLoader(getClass().getResource("RegisterSceneView.fxml"));
+	void registerButtonPressedRegisterScene(ActionEvent swapToLoginLayout) throws IOException {
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("LoginSceneView.fxml"));
 		root = loader.load();	
 		
-		RegisterSceneController registerController = loader.getController();
-		stage = (Stage)((Node)swapToRegisterLayout.getSource()).getScene().getWindow();
+		BankAccountController controller = loader.getController();
+		
+		stage = (Stage)((Node)swapToLoginLayout.getSource()).getScene().getWindow();
 		scene = new Scene(root);
 		stage.setScene(scene);
 		stage.show();
