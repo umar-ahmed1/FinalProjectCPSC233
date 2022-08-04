@@ -1,9 +1,8 @@
 package application;
 
-public class BankAccountController {
+import javafx.stage.Stage;
 
-	public BankAccountController() {
-		// TODO Auto-generated constructor stub
-	}
+public class BankAccountController {
+	Stage applicationStage;
 
 }
