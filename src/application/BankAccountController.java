@@ -38,6 +38,8 @@ public class BankAccountController {
 	void loginButtonPressed(ActionEvent event) {
 		System.out.println("login button pressed");
 	}
+	
+	
 	/** 
      * Method that changes the scene to the register scene and creates an account based on the information provided 
      * @param mainScene, the login scene to be stored so that it can be returned to.
@@ -47,26 +49,15 @@ public class BankAccountController {
 	void registerButtonPressedLoginScene(ActionEvent swapToRegisterLayout) throws IOException {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("RegisterSceneView.fxml"));
 		root = loader.load();	
-		
+		//my source for this is https://www.youtube.com/watch?v=wxhGKR3PQpo
 		RegisterSceneController registerController = loader.getController();
 		stage = (Stage)((Node)swapToRegisterLayout.getSource()).getScene().getWindow();
 		scene = new Scene(root);
 		stage.setScene(scene);
 		stage.show();
-		
-		/*
-		//store and hide original scene so we can return to it
-		loginScene = applicationStage.getScene();
-		applicationStage.getScene().getWindow().hide();
-		//create new stage with the register scene
-		Stage register = new Stage();
-		FXMLLoader loader = new FXMLLoader();
-		VBox root = loader.load(new FileInputStream("src/application/RegisterSceneView.fxml"));
-		Scene scene = new Scene(root);
-		register.setScene(scene);
-		register.show();
-		*/
 	}
+	
+	
 	
 	
 		

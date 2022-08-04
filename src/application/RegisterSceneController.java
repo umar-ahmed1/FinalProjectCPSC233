@@ -24,10 +24,10 @@ public class RegisterSceneController {
 	private Parent root;
 	
 	@FXML
-	private TextField usernameLoginField;
+	private TextField usernameRegisterField;
 	
 	@FXML
-	private TextField passwordLoginField;
+	private TextField passwordRegisterField;
 	
 	/** 
      * Checks if the values provided are equal to the stored username and password values. 
@@ -55,18 +55,16 @@ public class RegisterSceneController {
 		stage.setScene(scene);
 		stage.show();
 		
-		/*
-		//store and hide original scene so we can return to it
-		loginScene = applicationStage.getScene();
-		applicationStage.getScene().getWindow().hide();
-		//create new stage with the register scene
-		Stage register = new Stage();
-		FXMLLoader loader = new FXMLLoader();
-		VBox root = loader.load(new FileInputStream("src/application/RegisterSceneView.fxml"));
-		Scene scene = new Scene(root);
-		register.setScene(scene);
-		register.show();
-		*/
+	}
+	
+	String createAccountDetailsUsernameField() {
+		System.out.println("username field accessed");
+		return usernameRegisterField.getText();
+	}
+	String createAccountDetailsPasswordField() {
+		System.out.println("password field accessed");
+		return passwordRegisterField.getText();
+		
 	}
 	
 	
