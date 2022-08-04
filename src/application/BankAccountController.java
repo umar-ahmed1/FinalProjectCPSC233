@@ -1,9 +1,12 @@
 package application;
 
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
@@ -12,7 +15,9 @@ import javafx.stage.Stage;
 
 public class BankAccountController {
 	Stage applicationStage;
-
+	Scene loginScene;
+	Scene registerScene;
+	
 	@FXML
 	private TextField usernameLoginField;
 	
@@ -34,15 +39,23 @@ public class BankAccountController {
      * @return ?
      */
 	@FXML
-	void registerButtonPressed(ActionEvent event) {
+	void registerButtonPressed(ActionEvent event) throws IOException {
 		//store original scene so we can return to it
-		Scene loginScene = applicationStage.getScene();
-		System.out.println("register button pressed");
+		loginScene = applicationStage.getScene();
+		
+		if (applicationStage.getScene() == loginScene) {
 		
 		
+		applicationStage.setScene(registerScene);
+		}
 		
-		
-	}
+		if (applicationStage.getScene() == registerScene) {
+			System.out.println("test");
+			applicationStage.setScene(loginScene);
+			
+			}
+		}
+	
 	
 	
 }
