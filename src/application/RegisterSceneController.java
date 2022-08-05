@@ -22,6 +22,9 @@ public class RegisterSceneController {
 	private Stage stage;
 	private Scene scene;
 	private Parent root;
+	//ArrayList<Account> accountsRegistered = new ArrayList<Account>();
+	//int counts = 0;
+	public Account accountRegistered;
 	
 	@FXML
 	private TextField usernameRegisterField;
@@ -34,10 +37,8 @@ public class RegisterSceneController {
      * @param ?
      * @return ?
      */
-	@FXML
-	void loginButtonPressed(ActionEvent event) {
-		System.out.println("login button pressed");
-	}
+	
+	
 	/** 
      * Method that changes the scene to the register scene and creates an account based on the information provided 
      * @param mainScene, the login scene to be stored so that it can be returned to.
@@ -45,15 +46,23 @@ public class RegisterSceneController {
      */
 	@FXML
 	void registerButtonPressedRegisterScene(ActionEvent swapToLoginLayout) throws IOException {
+		
+		//create the account and add to list of accounts
+		accountRegistered = new Account(usernameRegisterField.getText(),passwordRegisterField.getText());
+		System.out.println("account registered: " + accountRegistered.toString());
+
+		
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("LoginSceneView.fxml"));
 		root = loader.load();	
-		
-		BankAccountController controller = loader.getController();
+		BankAccountController loginController = loader.getController();
+		loginController.account = accountRegistered;
 		
 		stage = (Stage)((Node)swapToLoginLayout.getSource()).getScene().getWindow();
 		scene = new Scene(root);
 		stage.setScene(scene);
 		stage.show();
+		
+		
 		
 	}
 	
@@ -63,10 +72,12 @@ public class RegisterSceneController {
 	}
 	String createAccountDetailsPasswordField() {
 		System.out.println("password field accessed");
-		return passwordRegisterField.getText();
-		
+		return passwordRegisterField.getText();	
 	}
 	
+	public Account getAccountRegistered() {
+		return accountRegistered;
+	}
 	
 		
 	
