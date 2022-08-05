@@ -8,6 +8,7 @@ public class Account {
 	private String password;
 	
 	
+	
 	//Default constructor
 	public Account(String usernameInput, String passwordInput) {
 		username = usernameInput;

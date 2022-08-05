@@ -23,7 +23,6 @@ public class RegisterSceneController {
 	private Scene scene;
 	private Parent root;
 	//ArrayList<Account> accountsRegistered = new ArrayList<Account>();
-	int counts = 0;
 	public Account accountRegistered;
 	
 	@FXML
@@ -31,6 +30,8 @@ public class RegisterSceneController {
 	
 	@FXML
 	private TextField passwordRegisterField;
+	
+	
 	
 	/** 
      * Checks if the values provided are equal to the stored username and password values. 
@@ -47,21 +48,21 @@ public class RegisterSceneController {
 	@FXML
 	void registerButtonPressedRegisterScene(ActionEvent swapToLoginLayout) throws IOException {
 		//create the account and add to list of accounts
+		if (usernameRegisterField.getText() != "" && passwordRegisterField.getText() != "" ) {
 		accountRegistered = new Account(usernameRegisterField.getText(),passwordRegisterField.getText());
 		System.out.println("account registered: " + accountRegistered.toString());
+		}
 
-		
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("LoginSceneView.fxml"));
 		root = loader.load();	
 		BankAccountController loginController = loader.getController();
-		loginController.account = accountRegistered;
 		
+		loginController.count = 2;
+		loginController.account = accountRegistered;
 		stage = (Stage)((Node)swapToLoginLayout.getSource()).getScene().getWindow();
 		scene = new Scene(root);
 		stage.setScene(scene);
-		stage.show();
-		
-		
+		stage.show();	
 		
 	}
 	

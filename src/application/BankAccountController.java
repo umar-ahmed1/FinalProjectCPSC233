@@ -24,12 +24,17 @@ public class BankAccountController {
 	private Scene scene;
 	private Parent root;
 	public Account account;
+	public String errorMessage;
+	public int count;
 	
 	@FXML
 	private TextField usernameLoginField;
 	
 	@FXML
 	private TextField passwordLoginField;
+	
+	@FXML
+	private Label registrationErrorMessage;
 	
 	/** 
      * Checks if the values provided are equal to the stored username and password values. 
@@ -58,6 +63,8 @@ public class BankAccountController {
      */
 	@FXML
 	void registerButtonPressedLoginScene(ActionEvent swapToRegisterLayout) throws IOException {
+		System.out.println("count: " + count);
+		if (count <=1) {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("RegisterSceneView.fxml"));
 		root = loader.load();	
 		//my source for this is https://www.youtube.com/watch?v=wxhGKR3PQpo
@@ -65,6 +72,8 @@ public class BankAccountController {
 		scene = new Scene(root);
 		stage.setScene(scene);
 		stage.show();
+		}
+		else registrationErrorMessage.setText("You have already created your account. Please Login");
 	}
 	
 	
