@@ -37,7 +37,7 @@ public class BankAccountController {
 	private Label registrationErrorMessage;
 	
 	/** 
-     * Checks if the values provided are equal to the stored username and password values. 
+     * When login button is pressed, Checks if the values in the username and password are equal to the stored username and password values. If so prints a statement. 
      * @param ?
      * @return ?
 	 * @throws IOException 
@@ -47,7 +47,7 @@ public class BankAccountController {
 			if (account != null) {
 				System.out.println(account.toString());
 				if (account.toCompareIndividual(usernameLoginField.getText(), passwordLoginField.getText())) System.out.println("account details match with an account in our database");
-				else System.out.println("you suck");
+				else System.out.println("you failed");
 				}
 			//if acc is null we want to set the error label to ask to create an account
 			else {
@@ -57,9 +57,9 @@ public class BankAccountController {
 	
 	
 	/** 
-     * Method that changes the scene to the register scene and creates an account based on the information provided 
-     * @param mainScene, the login scene to be stored so that it can be returned to.
-     * @return ?
+     * Method that changes the scene to the register scene and creates an account based on the information provided. 
+     * @param no parameters
+     * @return no return
      */
 	@FXML
 	void registerButtonPressedLoginScene(ActionEvent swapToRegisterLayout) throws IOException {
@@ -73,6 +73,7 @@ public class BankAccountController {
 		stage.setScene(scene);
 		stage.show();
 		}
+		//If the count is >=1 (happens when registration is complete) then it will display an error message and not let you register.
 		else registrationErrorMessage.setText("You have already created your account. Please Login");
 	}
 	

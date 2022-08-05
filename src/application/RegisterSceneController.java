@@ -32,14 +32,6 @@ public class RegisterSceneController {
 	private TextField passwordRegisterField;
 	
 	
-	
-	/** 
-     * Checks if the values provided are equal to the stored username and password values. 
-     * @param ?
-     * @return ?
-     */
-	
-	
 	/** 
      * Method that changes the scene to the register scene and creates an account based on the information provided 
      * @param mainScene, the login scene to be stored so that it can be returned to.
@@ -52,27 +44,19 @@ public class RegisterSceneController {
 		accountRegistered = new Account(usernameRegisterField.getText(),passwordRegisterField.getText());
 		System.out.println("account registered: " + accountRegistered.toString());
 		}
-
+		//creates a loginController (for the login scene) so we can send data back to that scene
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("LoginSceneView.fxml"));
 		root = loader.load();	
 		BankAccountController loginController = loader.getController();
-		
+		//send the account created back to the loginController - needs encapsulation 
 		loginController.count = 2;
 		loginController.account = accountRegistered;
+		//load in the login scene
 		stage = (Stage)((Node)swapToLoginLayout.getSource()).getScene().getWindow();
 		scene = new Scene(root);
 		stage.setScene(scene);
 		stage.show();	
 		
-	}
-	
-	String createAccountDetailsUsernameField() {
-		System.out.println("username field accessed");
-		return usernameRegisterField.getText();
-	}
-	String createAccountDetailsPasswordField() {
-		System.out.println("password field accessed");
-		return passwordRegisterField.getText();	
 	}
 	
 	public Account getAccountRegistered() {
