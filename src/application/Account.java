@@ -1,18 +1,43 @@
 package application;
 
+import java.util.ArrayList;
+
 public class Account {
 	private double balance;
 	private String username;
 	private String password;
 	
 	
+	
 	//Default constructor
-	public Account(double balanceInput,String usernameInput, String passwordInput) {
-		setBalance(balanceInput);
+	public Account(String usernameInput, String passwordInput) {
 		username = usernameInput;
-		setPassword(passwordInput);
+		password = passwordInput;
 	}
 
+	
+	//method to compare two accounts
+	public boolean toCompare(Account other) {
+		if (this.getUsername() == other.getUsername() && this.getPassword() == other.getPassword()) return true;
+		else return false;
+	}
+	
+	//method to compare an individual username and password not in an account with an account
+	public boolean toCompareIndividual(String username1, String password1) {
+		if (this.getUsername().equals(username1) && this.getPassword().equals(password1)) return true;
+		else return false;
+	} 
+	
+	/*
+	//method to compare given username/pass to all username pass
+	public boolean compareToAccounts(Account account1) {
+		for (Account account : accounts) {
+			if (account1.toCompare(account)) return true;
+		}
+		return false;
+	}
+	*/
+	
 	//Getter and setter for password 
 	public String getPassword() {
 		return password;
@@ -34,8 +59,10 @@ public class Account {
 	public void setBalance(double balance) {
 		this.balance = balance;
 	}
-	
-	
+	@Override
+	public String toString() {
+		return "username: " + this.getUsername() + "password: " + this.getPassword();
+	}
 	
 
 

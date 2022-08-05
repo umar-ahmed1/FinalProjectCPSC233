@@ -15,15 +15,16 @@ public class Main extends Application {
 		try {
 			//load the FXML file.
 			FXMLLoader loader = new FXMLLoader();
-			VBox root = loader.load(new FileInputStream("src/application/BankAccountView.fxml"));
+			VBox root = loader.load(new FileInputStream("src/application/LoginSceneView.fxml"));
 			//create the controller so it can modify the stage, set the starting stage to primaryStage
 			BankAccountController controller = (BankAccountController) loader.getController();
-			//controller.applicationStage = primaryStage;
+			controller.applicationStage = primaryStage;
 			//set the primary stage
 			Scene scene = new Scene(root,400,400);
 			primaryStage.setScene(scene);
 			primaryStage.setTitle("Umars final project");
 			primaryStage.show(); 
+			primaryStage.setResizable(false);
 			
 		} catch(Exception e) {
 			e.printStackTrace();
