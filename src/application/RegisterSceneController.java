@@ -23,7 +23,7 @@ public class RegisterSceneController {
 	private Scene scene;
 	private Parent root;
 	//ArrayList<Account> accountsRegistered = new ArrayList<Account>();
-	//int counts = 0;
+	int counts = 0;
 	public Account accountRegistered;
 	
 	@FXML
@@ -46,7 +46,6 @@ public class RegisterSceneController {
      */
 	@FXML
 	void registerButtonPressedRegisterScene(ActionEvent swapToLoginLayout) throws IOException {
-		
 		//create the account and add to list of accounts
 		accountRegistered = new Account(usernameRegisterField.getText(),passwordRegisterField.getText());
 		System.out.println("account registered: " + accountRegistered.toString());

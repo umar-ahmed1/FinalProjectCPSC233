@@ -23,7 +23,7 @@ public class Account {
 	
 	//method to compare an individual username and password not in an account with an account
 	public boolean toCompareIndividual(String username1, String password1) {
-		if (this.getUsername() == username1 && this.getPassword() == password1) return true;
+		if (this.getUsername().equals(username1) && this.getPassword().equals(password1)) return true;
 		else return false;
 	} 
 	

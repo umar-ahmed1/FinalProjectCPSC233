@@ -39,10 +39,15 @@ public class BankAccountController {
      */
 	@FXML
 	void loginButtonPressed(ActionEvent event) throws IOException {
-		System.out.println(account.toString());
-		System.out.println("test");
-			if (account.toCompareIndividual(usernameLoginField.getText(), passwordLoginField.getText())) System.out.println("account details match with an account in our database");
-			else System.out.println("you suck");
+			if (account != null) {
+				System.out.println(account.toString());
+				if (account.toCompareIndividual(usernameLoginField.getText(), passwordLoginField.getText())) System.out.println("account details match with an account in our database");
+				else System.out.println("you suck");
+				}
+			//if acc is null we want to set the error label to ask to create an account
+			else {
+				System.out.println("Create an account!");
+			}
 		}
 	
 	
@@ -56,8 +61,6 @@ public class BankAccountController {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("RegisterSceneView.fxml"));
 		root = loader.load();	
 		//my source for this is https://www.youtube.com/watch?v=wxhGKR3PQpo
-		RegisterSceneController registerController = loader.getController();
-	
 		stage = (Stage)((Node)swapToRegisterLayout.getSource()).getScene().getWindow();
 		scene = new Scene(root);
 		stage.setScene(scene);
