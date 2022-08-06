@@ -97,6 +97,10 @@ public class LoginSceneController{
 	}
 	@FXML
 	void resetUsername(ActionEvent resetButtonPressed) throws IOException{
+		FXMLLoader registerLoader = new FXMLLoader(getClass().getResource("RegisterSceneView.fxml"));
+		registerRoot = registerLoader.load();
+		RegisterSceneController registerController = registerLoader.getController();
+
 		
 	}
 	@FXML
