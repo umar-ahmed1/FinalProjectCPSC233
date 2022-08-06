@@ -23,6 +23,7 @@ public class LoginSceneController{
 	private Stage stage;
 	private Scene scene;
 	private Parent registerRoot;
+	private Parent resetPasswordRoot;
 	public Account account;
 	public String errorMessage;
 	public ArrayList<Account> accounts = new ArrayList<Account>();
@@ -99,12 +100,17 @@ public class LoginSceneController{
 	void resetUsername(ActionEvent resetButtonPressed) throws IOException{
 		FXMLLoader registerLoader = new FXMLLoader(getClass().getResource("RegisterSceneView.fxml"));
 		registerRoot = registerLoader.load();
-		RegisterSceneController registerController = registerLoader.getController();
-
+		
 		
 	}
 	@FXML
 	void resetPassword(ActionEvent resetButtonPressed) throws IOException{
+		FXMLLoader resetPasswordLoader = new FXMLLoader(getClass().getResource("ForgotPasswordView.fxml"));
+		resetPasswordRoot = resetPasswordLoader.load();
+		stage = (Stage)((Node)resetButtonPressed.getSource()).getScene().getWindow();		
+		scene = new Scene(resetPasswordRoot);
+		stage.setScene(scene);
+		stage.show();
 		
 	}
 	
