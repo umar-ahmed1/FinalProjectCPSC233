@@ -38,6 +38,9 @@ public class LoginSceneController{
 	@FXML
 	private Label registrationErrorMessage;
 	
+	@FXML
+	private Label loginErrorLabel;
+	
 	
 	/** 
      * When login button is pressed, Checks if the values in the username and password are equal to the stored username and password values. If so prints a statement. 
@@ -47,7 +50,7 @@ public class LoginSceneController{
      */
 	@FXML
 	void loginButtonPressed(ActionEvent event) throws IOException {
-
+		loginErrorLabel.setText("");
 		Account loginAccount = new Account(usernameLoginField.getText(),passwordLoginField.getText());
 		for (Account acc : accounts) {
 			System.out.println("account x: " + acc.toString());
@@ -57,11 +60,11 @@ public class LoginSceneController{
 				System.out.println(account.toString());
 				
 				if (loginAccount.toCompare(account)) System.out.println("account details match with an account in our database");
-				else System.out.println("you failed");
+				else loginErrorLabel.setText("Details do not match with registered account");
 				}
 			//if acc is null we want to set the error label to ask to create an account
 			else {
-				System.out.println("Create an account!");
+				loginErrorLabel.setText("Create an account before logging in");
 			}
 			
 	}
@@ -92,8 +95,14 @@ public class LoginSceneController{
 			registrationErrorMessage.setText("You have already registered. Please login");
 		}
 	}
-	
-	
+	@FXML
+	void resetUsername(ActionEvent resetButtonPressed) throws IOException{
+		
+	}
+	@FXML
+	void resetPassword(ActionEvent resetButtonPressed) throws IOException{
+		
+	}
 	
 	
 		
