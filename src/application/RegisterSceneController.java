@@ -22,7 +22,6 @@ public class RegisterSceneController{
 	private Stage stage;
 	private Scene scene;
 	private Parent loginRoot;
-	ArrayList<Account> accountsRegistered = new ArrayList<Account>();
 	public Account accountRegistered;
 	LoginSceneController loginController;
 	
