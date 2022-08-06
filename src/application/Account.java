@@ -28,15 +28,14 @@ public class Account {
 		else return false;
 	} 
 	
-	/*
 	//method to compare given username/pass to all username pass
-	public boolean compareToAccounts(Account account1) {
+	public boolean compareTwoAccounts(Account account1,ArrayList<Account> accounts) {
 		for (Account account : accounts) {
 			if (account1.toCompare(account)) return true;
 		}
 		return false;
 	}
-	*/
+
 	
 	//Getter and setter for password 
 	public String getPassword() {
