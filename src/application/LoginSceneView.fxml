@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox prefHeight="400.0" prefWidth="400.0" style="-fx-background-color: #1c2e4a;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.BankAccountController">
+<VBox prefHeight="400.0" prefWidth="400.0" style="-fx-background-color: #1c2e4a;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.LoginSceneController">
    <children>
       <Label alignment="CENTER" prefHeight="27.0" prefWidth="132.0" text="Umar's Bank" textFill="WHITE">
          <VBox.margin>
@@ -63,7 +63,7 @@
       </Button>
       <Label text="" fx:id = "registrationErrorMessage" textFill="RED">
          <VBox.margin>
-            <Insets left="60.0" />
+            <Insets left="90.0" />
          </VBox.margin>
       </Label>
       

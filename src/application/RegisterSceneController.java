@@ -15,15 +15,16 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-public class RegisterSceneController {
+public class RegisterSceneController{
 	Stage applicationStage;
 	Scene loginScene;
 	Scene registerScene;
 	private Stage stage;
 	private Scene scene;
-	private Parent root;
-	//ArrayList<Account> accountsRegistered = new ArrayList<Account>();
+	private Parent loginRoot;
+	ArrayList<Account> accountsRegistered = new ArrayList<Account>();
 	public Account accountRegistered;
+	LoginSceneController loginController;
 	
 	@FXML
 	private TextField usernameRegisterField;
@@ -44,27 +45,28 @@ public class RegisterSceneController {
 		accountRegistered = new Account(usernameRegisterField.getText(),passwordRegisterField.getText());
 		System.out.println("account registered: " + accountRegistered.toString());
 		}
-		//creates a loginController (for the login scene) so we can send data back to that scene
-		FXMLLoader loader = new FXMLLoader(getClass().getResource("LoginSceneView.fxml"));
-		root = loader.load();	
-		BankAccountController loginController = loader.getController();
-		//send the account created back to the loginController - needs encapsulation 
-		loginController.count = 2;
+		
+		//swap to login scene
+		FXMLLoader loginLoader = new FXMLLoader(getClass().getResource("LoginSceneView.fxml"));
+		loginRoot = loginLoader.load();
+		loginController = loginLoader.getController();
+		System.out.println("test");
 		loginController.account = accountRegistered;
-		//load in the login scene
-		stage = (Stage)((Node)swapToLoginLayout.getSource()).getScene().getWindow();
-		scene = new Scene(root);
+		loginController.registerable = false;
+		
+		stage = (Stage)((Node)swapToLoginLayout.getSource()).getScene().getWindow();	
+		scene = new Scene(loginRoot);
 		stage.setScene(scene);
 		stage.show();	
-		
+			
 	}
 	
 	public Account getAccountRegistered() {
 		return accountRegistered;
 	}
 	
-		
-	
-	
+	public ArrayList<Account> getAccountsRegistered(){
+		return accountsRegistered;
+	}
 	
 }

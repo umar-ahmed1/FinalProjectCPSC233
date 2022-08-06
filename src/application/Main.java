@@ -10,14 +10,15 @@ import javafx.scene.layout.VBox;
 
 
 public class Main extends Application {
+
+
 	@Override
 	public void start(Stage primaryStage) {
 		try {
 			//load the FXML file.
-			FXMLLoader loader = new FXMLLoader();
-			VBox root = loader.load(new FileInputStream("src/application/LoginSceneView.fxml"));
-			//create the controller so it can modify the stage, set the starting stage to primaryStage
-			BankAccountController controller = (BankAccountController) loader.getController();
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("LoginSceneView.fxml"));
+			VBox root = loader.load();
+			LoginSceneController controller = new LoginSceneController();
 			controller.applicationStage = primaryStage;
 			//set the primary stage
 			Scene scene = new Scene(root,400,400);
@@ -25,6 +26,8 @@ public class Main extends Application {
 			primaryStage.setTitle("Umars final project");
 			primaryStage.show(); 
 			primaryStage.setResizable(false);
+			//load the FXML file.
+
 			
 		} catch(Exception e) {
 			e.printStackTrace();
