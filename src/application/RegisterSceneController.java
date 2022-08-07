@@ -64,8 +64,5 @@ public class RegisterSceneController{
 		return accountRegistered;
 	}
 	
-	public ArrayList<Account> getAccountsRegistered(){
-		return accountsRegistered;
-	}
 	
 }

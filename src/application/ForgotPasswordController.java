@@ -37,17 +37,22 @@ public class ForgotPasswordController {
 			FXMLLoader loginLoader = new FXMLLoader(getClass().getResource("LoginSceneView.fxml"));
 			loginRoot = loginLoader.load();
 			loginController = loginLoader.getController();
-			loginController.account.setPassword(thePassword);
+			loginController.passwordToReferTo = getThePassword();
 					
 			stage = (Stage)((Node)event.getSource()).getScene().getWindow();	
 			scene = new Scene(loginRoot);
 			stage.setScene(scene);
 			stage.show();			
 		}
+		else if (forgotPasswordTextField.getText().equals("") || forgotPasswordConfirmTextField.getText().equals("")) forgotPasswordErrorLabel.setText("Please enter a password in both fields.");
 		else forgotPasswordErrorLabel.setText("Passwords do not match, please try again");
 		
 	
 		
+	}
+
+	public String getThePassword() {
+		return thePassword;
 	}
 	
 	

@@ -28,7 +28,7 @@ public class LoginSceneController{
 	public String errorMessage;
 	public ArrayList<Account> accounts = new ArrayList<Account>();
 	boolean registerable = true;
-
+	public String passwordToReferTo;
 
 	@FXML
 	private TextField usernameLoginField;
@@ -107,10 +107,15 @@ public class LoginSceneController{
 	void resetPassword(ActionEvent resetButtonPressed) throws IOException{
 		FXMLLoader resetPasswordLoader = new FXMLLoader(getClass().getResource("ForgotPasswordView.fxml"));
 		resetPasswordRoot = resetPasswordLoader.load();
+		ForgotPasswordController  resetPasswordController = resetPasswordLoader.getController();
+		
 		stage = (Stage)((Node)resetButtonPressed.getSource()).getScene().getWindow();		
 		scene = new Scene(resetPasswordRoot);
 		stage.setScene(scene);
 		stage.show();
+		
+		account.setPassword(resetPasswordController.getThePassword());
+		
 		
 	}
 	
