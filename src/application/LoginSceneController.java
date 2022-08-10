@@ -25,7 +25,8 @@ public class LoginSceneController{
 	public ArrayList<Account> accounts = new ArrayList<Account>();
 	boolean registerable = true;
 	public String passwordToReferTo;
-
+	public Account loggedInAccount;
+	
 	@FXML
 	private TextField usernameLoginField;
 	
@@ -48,15 +49,17 @@ public class LoginSceneController{
 	@FXML
 	void loginButtonPressed(ActionEvent event) throws IOException {
 		loginErrorLabel.setText("");
-		Account loginAccount = new Account(usernameLoginField.getText(),passwordLoginField.getText());
 		for (Account acc : accounts) {
-			System.out.println("account x: " + acc.toString());
-		}	
+			System.out.println("accx: " + acc.toString());
+		}
 		
-			if (loginAccount != null && account!= null) {
-				System.out.println(account.toString());
+		Account loginAccount = new Account(usernameLoginField.getText(),passwordLoginField.getText());
+		
+			if (loginAccount != null && accounts.size()!= 0 && accounts != null) {
 				
-				if (loginAccount.toCompare(account)) System.out.println("account details match with an account in our database");
+				if (loginAccount.compareToStoredAccounts(accounts)) {
+					loggedInAccount = new Account
+				}
 				else loginErrorLabel.setText("Details do not match with registered account");
 				}
 			//if acc is null we want to set the error label to ask to create an account
@@ -113,7 +116,9 @@ public class LoginSceneController{
 	
 	void createAccount(Scene scene, String user, String pass) {
 		account = new Account(user,pass);
+		accounts.add(account);
 		applicationStage.setScene(scene);
+		
 		
 	}
 	

@@ -14,6 +14,11 @@ public class Account {
 		password = passwordInput;
 	}
 
+	//constructor to copy another account
+	public Account(Account toCopy) {
+	this.username = toCopy.getUsername();
+	this.password = toCopy.getPassword();
+	}
 	
 	//method to compare two accounts
 	public boolean toCompare(Account other) {
