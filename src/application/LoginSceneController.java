@@ -58,7 +58,10 @@ public class LoginSceneController{
 			if (loginAccount != null && accounts.size()!= 0 && accounts != null) {
 				
 				if (loginAccount.compareToStoredAccounts(accounts)) {
-					loggedInAccount = new Account
+					loggedInAccount = new Account(account);
+					
+					//we are now logged in, create the bank scene
+					
 				}
 				else loginErrorLabel.setText("Details do not match with registered account");
 				}
@@ -99,8 +102,7 @@ public class LoginSceneController{
 		root.getChildren().addAll(topLabel,topField,botLabel,botField,doneButton);
 		
 		Scene resetScene = new Scene(root,400,200);	
-		applicationStage.setScene(resetScene);
-		
+		applicationStage.setScene(resetScene);	
 	}
 	
 	void resetField(Scene scene, String newField, String newConfirmField, Label errorMessage,String whichOne) {
@@ -114,12 +116,12 @@ public class LoginSceneController{
 		applicationStage.setScene(scene);
 	}
 	
+	
+	
 	void createAccount(Scene scene, String user, String pass) {
 		account = new Account(user,pass);
 		accounts.add(account);
-		applicationStage.setScene(scene);
-		
-		
+		applicationStage.setScene(scene);		
 	}
 	
 	@FXML
@@ -136,7 +138,7 @@ public class LoginSceneController{
 		//create the button and let it have an action on event
 		Button doneButton = new Button("Done");
 		doneButton.setOnAction(doneEvent -> resetField(loginScene,topField.getText(),botField.getText(),forgetErrorLabel,"Passwords"));
-    	
+    		
 		//margins, order is top right bottom left in the (0,0,0,0)
 		VBox.setMargin(topLabel, new Insets(10,100,0,100));
 		VBox.setMargin(topField, new Insets(0,100,0,100));	
@@ -155,35 +157,37 @@ public class LoginSceneController{
 	}
 	
 	@FXML
-	void resetUsername(ActionEvent resetButtonPressed) throws IOException{
+	void resetUsernameScene(ActionEvent resetButtonPressed) throws IOException{
 		Scene loginScene = applicationStage.getScene();
 		
-		//create the labels and the textfields
-		VBox root = new VBox(5);
-		Label topLabel = new Label("Username");
-		TextField topField = new TextField();	
-		TextField botField = new TextField();
-		Label botLabel = new Label("Confirm Username");
-		Label forgetErrorLabel = new Label("");
-		//create the button and let it have an action on event
-		Button doneButton = new Button("Done");
-    	doneButton.setOnAction(doneEvent -> resetField(loginScene,topField.getText(),botField.getText(),forgetErrorLabel,"Usernames"));
+    	//create the scene
+    	VBox allRows = new VBox();
+    	Label topLabel = new Label("All registered usernames:");
+    	allRows.getChildren().add(topLabel);
+    	VBox.setMargin(topLabel, new Insets(10,50,0,50));
+    	Button doneButton = new Button("Done");
+    	doneButton.setOnAction(doneEvent -> applicationStage.setScene(loginScene));
+		
     	
-		//margins, order is top right bottom left in the (0,0,0,0)
-		VBox.setMargin(topLabel, new Insets(10,100,0,100));
-		VBox.setMargin(topField, new Insets(0,100,0,100));	
-		VBox.setMargin(botLabel, new Insets(10,100,0,100));
-		VBox.setMargin(botField, new Insets(0,100,0,100));
-		VBox.setMargin(forgetErrorLabel, new Insets(10,100,0,100));
-		VBox.setMargin(doneButton, new Insets(10,100,0,175));
+    	
+    	//create a list to store all the quiz grades
+    	int rowCounter = 0;
+    	while (rowCounter < accounts.size()) {
+    		HBox userRow = new HBox();
+           	Label userLabel = new Label("User #" + (rowCounter+1) + " " + accounts.get(rowCounter).getUsername());  
+           	HBox.setMargin(userLabel, new Insets(0,50,0,50));
+        	userRow.getChildren().addAll(userLabel);
+        	allRows.getChildren().addAll(userRow);
+        	rowCounter++;
+    	}
+    	
+    	allRows.getChildren().add(doneButton);
+    	VBox.setMargin(doneButton, new Insets(10,50,0,50));
+    	
+		Scene usersListScene = new Scene(allRows,250,70 + accounts.size() * 30);
 		
-		root.getChildren().addAll(topLabel,topField,botLabel,botField,doneButton,forgetErrorLabel);
-		
-		Scene resetScene = new Scene(root,400,200);
-		
-		if (account!= null) applicationStage.setScene(resetScene);
-		else loginErrorLabel.setText("Error, no account to reset username for");
-			
+		if (account!= null) applicationStage.setScene(usersListScene);
+		else loginErrorLabel.setText("Error, no account to reset username for");	
 	}
 	
 		

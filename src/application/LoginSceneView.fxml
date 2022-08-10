@@ -29,7 +29,7 @@
                   <Insets left="75.0" />
                </HBox.margin>
             </TextField>
-            <Button mnemonicParsing="false" onAction="#resetUsername" text="Forgot Username" />
+            <Button mnemonicParsing="false" onAction="#resetUsernameScene" text="Forgot Username" />
          </children>
       </HBox>
       <Label text="Password" textFill="WHITE">
