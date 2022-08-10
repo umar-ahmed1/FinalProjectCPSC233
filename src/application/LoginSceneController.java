@@ -66,10 +66,6 @@ public class LoginSceneController{
 			
 	}
 	
-	public Account getAccount() {
-		return account;
-	}
-	
 	
 	/** 
      * Method that changes the scene to the register scene and creates an account based on the information provided. 
@@ -78,6 +74,30 @@ public class LoginSceneController{
      */
 	@FXML
 	void registerButtonPressedLoginScene(ActionEvent swapToRegisterLayout) throws IOException {	
+		Scene loginScene = applicationStage.getScene();
+		
+		//create the labels and the textfields
+		VBox root = new VBox(5);
+		Label topLabel = new Label("Username");
+		TextField topField = new TextField();	
+		TextField botField = new TextField();
+		Label botLabel = new Label("Password");
+		//create the button and let it have an action on event
+		Button doneButton = new Button("Done");
+		doneButton.setOnAction(doneEvent -> createAccount(loginScene, topField.getText(),botField.getText()));
+    	
+		//margins, order is top right bottom left in the (0,0,0,0)
+		VBox.setMargin(topLabel, new Insets(10,100,0,100));
+		VBox.setMargin(topField, new Insets(0,100,0,100));	
+		VBox.setMargin(botLabel, new Insets(10,100,0,100));
+		VBox.setMargin(botField, new Insets(0,100,0,100));
+		VBox.setMargin(doneButton, new Insets(10,100,0,175));
+		
+		root.getChildren().addAll(topLabel,topField,botLabel,botField,doneButton);
+		
+		Scene resetScene = new Scene(root,400,200);	
+		applicationStage.setScene(resetScene);
+		
 	}
 	
 	void resetField(Scene scene, String newField, String newConfirmField, Label errorMessage,String whichOne) {
@@ -91,6 +111,11 @@ public class LoginSceneController{
 		applicationStage.setScene(scene);
 	}
 	
+	void createAccount(Scene scene, String user, String pass) {
+		account = new Account(user,pass);
+		applicationStage.setScene(scene);
+		
+	}
 	
 	@FXML
 	void resetPasswordScene(ActionEvent resetButtonPressed) throws IOException{
@@ -105,7 +130,7 @@ public class LoginSceneController{
 		Label forgetErrorLabel = new Label("");
 		//create the button and let it have an action on event
 		Button doneButton = new Button("Done");
-    	doneButton.setOnAction(doneEvent -> resetField(loginScene,topField.getText(),botField.getText(),forgetErrorLabel,"Passwords"));
+		doneButton.setOnAction(doneEvent -> resetField(loginScene,topField.getText(),botField.getText(),forgetErrorLabel,"Passwords"));
     	
 		//margins, order is top right bottom left in the (0,0,0,0)
 		VBox.setMargin(topLabel, new Insets(10,100,0,100));
