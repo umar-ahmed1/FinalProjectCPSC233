@@ -8,6 +8,7 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -18,12 +19,7 @@ import javafx.stage.Stage;
 
 public class LoginSceneController{
 	Stage applicationStage;
-	Scene loginScene;
-	Scene registerScene;
-	private Stage stage;
-	private Scene scene;
-	private Parent registerRoot;
-	private Parent resetPasswordRoot;
+
 	public Account account;
 	public String errorMessage;
 	public ArrayList<Account> accounts = new ArrayList<Account>();
@@ -82,39 +78,54 @@ public class LoginSceneController{
      */
 	@FXML
 	void registerButtonPressedLoginScene(ActionEvent swapToRegisterLayout) throws IOException {
-		FXMLLoader registerLoader = new FXMLLoader(getClass().getResource("RegisterSceneView.fxml"));
-		registerRoot = registerLoader.load();
-		RegisterSceneController registerController = registerLoader.getController();
 
-		if (registerable) {
-		stage = (Stage)((Node)swapToRegisterLayout.getSource()).getScene().getWindow();		
-		scene = new Scene(registerRoot);
-		stage.setScene(scene);
-		stage.show();
-		}
-		else {
-			registrationErrorMessage.setText("You have already registered. Please login");
-		}
+
+		
+		
 	}
 	@FXML
 	void resetUsername(ActionEvent resetButtonPressed) throws IOException{
-		FXMLLoader registerLoader = new FXMLLoader(getClass().getResource("RegisterSceneView.fxml"));
-		registerRoot = registerLoader.load();
+			
+	}
+	
+	void resetPassword(Scene scene, String newPassword, String newPasswordConfirmField) {
 		
+		if (newPassword.equals(newPasswordConfirmField)){
+		this.account.setPassword(newPassword);
+		}
+		else
+		applicationStage.setScene(scene);
 		
 	}
 	@FXML
-	void resetPassword(ActionEvent resetButtonPressed) throws IOException{
-		FXMLLoader resetPasswordLoader = new FXMLLoader(getClass().getResource("ForgotPasswordView.fxml"));
-		resetPasswordRoot = resetPasswordLoader.load();
-		ForgotPasswordController  resetPasswordController = resetPasswordLoader.getController();
+	void resetPasswordScene(ActionEvent resetButtonPressed) throws IOException{
+		Scene loginScene = applicationStage.getScene();
 		
-		stage = (Stage)((Node)resetButtonPressed.getSource()).getScene().getWindow();		
-		scene = new Scene(resetPasswordRoot);
-		stage.setScene(scene);
-		stage.show();
+		//create the labels and the textfields
+		VBox root = new VBox(5);
+		Label topLabel = new Label("Password");
+		TextField topField = new TextField();	
+		TextField botField = new TextField();
+		Label botLabel = new Label("Confirm Password");
+	
+		//create the button and let it have an action on event
+		Button doneButton = new Button("Done");
+    	doneButton.setOnAction(doneEvent -> resetPassword(loginScene,topField.getText(),botField.getText()));
 		
-		account.setPassword(resetPasswordController.getThePassword());
+		//margins, order is top right bottom left in the (0,0,0,0)
+		VBox.setMargin(topLabel, new Insets(10,100,0,100));
+		VBox.setMargin(topField, new Insets(0,100,0,100));	
+		VBox.setMargin(botLabel, new Insets(10,100,0,100));
+		VBox.setMargin(botField, new Insets(0,100,0,100));
+		
+		
+		root.getChildren().addAll(topLabel,topField,botLabel,botField);
+		
+		Scene resetScene = new Scene(root,400,200);
+		
+		applicationStage.setScene(resetScene);
+		
+
 		
 		
 	}
