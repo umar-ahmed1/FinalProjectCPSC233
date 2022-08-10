@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox prefHeight="400.0" prefWidth="400.0" style="-fx-background-color: #1c2e4a;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.BankAccountController">
+<VBox prefHeight="300.0" prefWidth="400.0" style="-fx-background-color: #1c2e4a;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.LoginSceneController">
    <children>
       <Label alignment="CENTER" prefHeight="27.0" prefWidth="132.0" text="Umar's Bank" textFill="WHITE">
          <VBox.margin>
@@ -19,24 +19,34 @@
       </Label>
       <Label text="Username" textFill="WHITE">
          <VBox.margin>
-            <Insets left="100.0" />
+            <Insets left="75.0" />
          </VBox.margin>
       </Label>
-      <TextField fx:id="usernameLoginField">
-         <VBox.margin>
-            <Insets left="100.0" right="100.0" />
-         </VBox.margin>
-      </TextField>
+      <HBox prefHeight="24.0" prefWidth="400.0">
+         <children>
+            <TextField fx:id="usernameLoginField" prefHeight="25.0" prefWidth="149.0">
+               <HBox.margin>
+                  <Insets left="75.0" />
+               </HBox.margin>
+            </TextField>
+            <Button mnemonicParsing="false" onAction="#resetUsernameScene" text="Forgot Username" />
+         </children>
+      </HBox>
       <Label text="Password" textFill="WHITE">
          <VBox.margin>
-            <Insets left="100.0" />
+            <Insets left="75.0" />
          </VBox.margin>
       </Label>
-      <TextField fx:id="passwordLoginField">
-         <VBox.margin>
-            <Insets left="100.0" right="100.0" />
-         </VBox.margin>
-      </TextField>
+      <HBox prefHeight="26.0" prefWidth="400.0">
+         <children>
+            <TextField fx:id="passwordLoginField">
+               <HBox.margin>
+                  <Insets left="75.0" />
+               </HBox.margin>
+            </TextField>
+            <Button mnemonicParsing="false" onAction="#resetPasswordScene" prefHeight="25.0" prefWidth="108.0" text="Forgot Password" />
+         </children>
+      </HBox>
       <Button alignment="CENTER" mnemonicParsing="false" onAction="#loginButtonPressed" prefHeight="25.0" prefWidth="100.0" text="Login">
          <opaqueInsets>
             <Insets />
@@ -45,13 +55,15 @@
             <Insets bottom="1.0" left="150.0" right="100.0" top="10.0" />
          </VBox.margin>
       </Button>
+      <Label fx:id="loginErrorLabel" text="" textFill="RED">
+         <VBox.margin>
+            <Insets left="90.0" top="5.0" />
+         </VBox.margin>
+      </Label>
       <Label text="Don't have an account? " textFill="WHITE">
          <VBox.margin>
-            <Insets left="80.0" top="50.0" />
+            <Insets left="140.0" top="10.0" />
          </VBox.margin>
-         <padding>
-            <Insets left="60.0" />
-         </padding>
       </Label>
       <Button alignment="CENTER" mnemonicParsing="false" onAction="#registerButtonPressedLoginScene" prefHeight="25.0" prefWidth="100.0" text="Register Now">
          <opaqueInsets>
@@ -61,9 +73,9 @@
             <Insets left="150.0" top="10.0" />
          </VBox.margin>
       </Button>
-      <Label text="" fx:id = "registrationErrorMessage" textFill="RED">
+      <Label fx:id="registrationErrorMessage" text="" textFill="RED">
          <VBox.margin>
-            <Insets left="60.0" />
+            <Insets left="90.0" top="5.0" />
          </VBox.margin>
       </Label>
       
