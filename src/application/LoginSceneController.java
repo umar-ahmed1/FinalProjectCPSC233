@@ -77,26 +77,21 @@ public class LoginSceneController{
      * @return no return
      */
 	@FXML
-	void registerButtonPressedLoginScene(ActionEvent swapToRegisterLayout) throws IOException {
-
-
-		
-		
-	}
-	@FXML
-	void resetUsername(ActionEvent resetButtonPressed) throws IOException{
-			
+	void registerButtonPressedLoginScene(ActionEvent swapToRegisterLayout) throws IOException {	
 	}
 	
-	void resetPassword(Scene scene, String newPassword, String newPasswordConfirmField) {
+	void resetField(Scene scene, String newField, String newConfirmField, Label errorMessage,String whichOne) {
+		errorMessage.setText("");
 		
-		if (newPassword.equals(newPasswordConfirmField)){
-		this.account.setPassword(newPassword);
+		if (newField.equals(newConfirmField)){
+			if (whichOne.equals("Usernames")) this.account.setUsername(newField);
+			if (whichOne.equals("Passwords")) this.account.setPassword(newField);
 		}
-		else
+		else errorMessage.setText(whichOne + " do not match. Please try again");
 		applicationStage.setScene(scene);
-		
 	}
+	
+	
 	@FXML
 	void resetPasswordScene(ActionEvent resetButtonPressed) throws IOException{
 		Scene loginScene = applicationStage.getScene();
@@ -107,29 +102,59 @@ public class LoginSceneController{
 		TextField topField = new TextField();	
 		TextField botField = new TextField();
 		Label botLabel = new Label("Confirm Password");
-	
+		Label forgetErrorLabel = new Label("");
 		//create the button and let it have an action on event
 		Button doneButton = new Button("Done");
-    	doneButton.setOnAction(doneEvent -> resetPassword(loginScene,topField.getText(),botField.getText()));
-		
+    	doneButton.setOnAction(doneEvent -> resetField(loginScene,topField.getText(),botField.getText(),forgetErrorLabel,"Passwords"));
+    	
 		//margins, order is top right bottom left in the (0,0,0,0)
 		VBox.setMargin(topLabel, new Insets(10,100,0,100));
 		VBox.setMargin(topField, new Insets(0,100,0,100));	
 		VBox.setMargin(botLabel, new Insets(10,100,0,100));
 		VBox.setMargin(botField, new Insets(0,100,0,100));
+		VBox.setMargin(forgetErrorLabel, new Insets(10,100,0,100));
+		VBox.setMargin(doneButton, new Insets(10,100,0,175));
 		
-		
-		root.getChildren().addAll(topLabel,topField,botLabel,botField);
+		root.getChildren().addAll(topLabel,topField,botLabel,botField,doneButton,forgetErrorLabel);
 		
 		Scene resetScene = new Scene(root,400,200);
 		
-		applicationStage.setScene(resetScene);
-		
-
-		
-		
+		if (account!= null) applicationStage.setScene(resetScene);
+		else loginErrorLabel.setText("Error, no account to reset password for");
+	
 	}
 	
+	@FXML
+	void resetUsername(ActionEvent resetButtonPressed) throws IOException{
+		Scene loginScene = applicationStage.getScene();
+		
+		//create the labels and the textfields
+		VBox root = new VBox(5);
+		Label topLabel = new Label("Username");
+		TextField topField = new TextField();	
+		TextField botField = new TextField();
+		Label botLabel = new Label("Confirm Username");
+		Label forgetErrorLabel = new Label("");
+		//create the button and let it have an action on event
+		Button doneButton = new Button("Done");
+    	doneButton.setOnAction(doneEvent -> resetField(loginScene,topField.getText(),botField.getText(),forgetErrorLabel,"Usernames"));
+    	
+		//margins, order is top right bottom left in the (0,0,0,0)
+		VBox.setMargin(topLabel, new Insets(10,100,0,100));
+		VBox.setMargin(topField, new Insets(0,100,0,100));	
+		VBox.setMargin(botLabel, new Insets(10,100,0,100));
+		VBox.setMargin(botField, new Insets(0,100,0,100));
+		VBox.setMargin(forgetErrorLabel, new Insets(10,100,0,100));
+		VBox.setMargin(doneButton, new Insets(10,100,0,175));
+		
+		root.getChildren().addAll(topLabel,topField,botLabel,botField,doneButton,forgetErrorLabel);
+		
+		Scene resetScene = new Scene(root,400,200);
+		
+		if (account!= null) applicationStage.setScene(resetScene);
+		else loginErrorLabel.setText("Error, no account to reset username for");
+			
+	}
 	
 		
 	
