@@ -39,7 +39,6 @@ public class LoginSceneController{
 	@FXML
 	private Label loginErrorLabel;
 	
-	
 	/** 
      * When login button is pressed, Checks if the values in the username and password are equal to the stored username and password values. If so prints a statement. 
      * @param ?
@@ -52,13 +51,14 @@ public class LoginSceneController{
 		for (Account acc : accounts) {
 			System.out.println("accx: " + acc.toString());
 		}
+		System.out.println("-----------------------------------------------------------");
 		
 		Account loginAccount = new Account(usernameLoginField.getText(),passwordLoginField.getText());
 		
 			if (loginAccount != null && accounts.size()!= 0 && accounts != null) {
 				
-				if (loginAccount.compareToStoredAccounts(accounts)) {
-					loggedInAccount = new Account(account);
+				if (loginAccount.compareToAllLogins(accounts)) {
+					loggedInAccount = account;
 					
 					//we are now logged in, create the bank scene
 					
@@ -84,24 +84,31 @@ public class LoginSceneController{
 		
 		//create the labels and the textfields
 		VBox root = new VBox(5);
-		Label topLabel = new Label("Username");
-		TextField topField = new TextField();	
-		TextField botField = new TextField();
-		Label botLabel = new Label("Password");
+		Label userLabel = new Label("Username");
+		TextField userField = new TextField();	
+		TextField passField = new TextField();
+		Label passLabel = new Label("Password");
+		TextField balField = new TextField();
+		Label balLabel = new Label("Initial deposit");
+		Label errorLabel = new Label("");
+		
 		//create the button and let it have an action on event
 		Button doneButton = new Button("Done");
-		doneButton.setOnAction(doneEvent -> createAccount(loginScene, topField.getText(),botField.getText()));
+		doneButton.setOnAction(doneEvent -> createAccount(loginScene, userField.getText(),passField.getText(),balField.getText(),errorLabel));
     	
 		//margins, order is top right bottom left in the (0,0,0,0)
-		VBox.setMargin(topLabel, new Insets(10,100,0,100));
-		VBox.setMargin(topField, new Insets(0,100,0,100));	
-		VBox.setMargin(botLabel, new Insets(10,100,0,100));
-		VBox.setMargin(botField, new Insets(0,100,0,100));
+		VBox.setMargin(userLabel, new Insets(10,100,0,100));
+		VBox.setMargin(userField, new Insets(0,100,0,100));	
+		VBox.setMargin(passLabel, new Insets(10,100,0,100));
+		VBox.setMargin(passField, new Insets(0,100,0,100));
+		VBox.setMargin(balLabel, new Insets(10,100,0,100));
+		VBox.setMargin(balField, new Insets(0,100,0,100));
+		VBox.setMargin(errorLabel, new Insets(10,10,0,25));
 		VBox.setMargin(doneButton, new Insets(10,100,0,175));
 		
-		root.getChildren().addAll(topLabel,topField,botLabel,botField,doneButton);
+		root.getChildren().addAll(userLabel,userField,passLabel,passField,balLabel,balField,errorLabel,doneButton);
 		
-		Scene resetScene = new Scene(root,400,200);	
+		Scene resetScene = new Scene(root,400,300);	
 		applicationStage.setScene(resetScene);	
 	}
 	
@@ -111,18 +118,28 @@ public class LoginSceneController{
 		if (newField.equals(newConfirmField)){
 			if (whichOne.equals("Usernames")) this.account.setUsername(newField);
 			if (whichOne.equals("Passwords")) this.account.setPassword(newField);
+			applicationStage.setScene(scene);
+		}		
+		else if (newField.equals("") || newConfirmField.equals("")) errorMessage.setText("Error. One or more of the fields are blank");
+		else if (!newField.equals(newConfirmField)) errorMessage.setText(whichOne + " do not match. Please try again");
+	}
+	
+
+	void createAccount(Scene scene, String user, String pass, String bal, Label errorLabel) {
+		errorLabel.setText("");
+		//Try to create a new account with the provided details
+		try {
+			account = new Account(user,pass,bal,accounts);
+			accounts.add(account);
+			applicationStage.setScene(scene);	
+		//If an error occurs, the account class will determine why the error has occured and the account will not be created
+		//Instead, an error message will be displayed which the account constructor has thrown
+		} catch (InvalidBalanceException ige) {
+			errorLabel.setText(ige.getMessage());	
 		}
-		else errorMessage.setText(whichOne + " do not match. Please try again");
-		applicationStage.setScene(scene);
+			
 	}
-	
-	
-	
-	void createAccount(Scene scene, String user, String pass) {
-		account = new Account(user,pass);
-		accounts.add(account);
-		applicationStage.setScene(scene);		
-	}
+
 	
 	@FXML
 	void resetPasswordScene(ActionEvent resetButtonPressed) throws IOException{
@@ -130,7 +147,9 @@ public class LoginSceneController{
 		
 		//create the labels and the textfields
 		VBox root = new VBox(5);
-		Label topLabel = new Label("Password");
+		Label userLabel = new Label("Username to reset password for");
+		TextField userField = new TextField();	
+		Label topLabel = new Label("New Password");
 		TextField topField = new TextField();	
 		TextField botField = new TextField();
 		Label botLabel = new Label("Confirm Password");
@@ -140,18 +159,20 @@ public class LoginSceneController{
 		doneButton.setOnAction(doneEvent -> resetField(loginScene,topField.getText(),botField.getText(),forgetErrorLabel,"Passwords"));
     		
 		//margins, order is top right bottom left in the (0,0,0,0)
-		VBox.setMargin(topLabel, new Insets(10,100,0,100));
+		VBox.setMargin(userLabel, new Insets(2,100,0,100));
+		VBox.setMargin(userField, new Insets(0,100,0,100));	
+		VBox.setMargin(topLabel, new Insets(2,100,0,100));
 		VBox.setMargin(topField, new Insets(0,100,0,100));	
-		VBox.setMargin(botLabel, new Insets(10,100,0,100));
+		VBox.setMargin(botLabel, new Insets(2,100,0,100));
 		VBox.setMargin(botField, new Insets(0,100,0,100));
-		VBox.setMargin(forgetErrorLabel, new Insets(10,100,0,100));
+		VBox.setMargin(forgetErrorLabel, new Insets(10,25,0,85));
 		VBox.setMargin(doneButton, new Insets(10,100,0,175));
 		
-		root.getChildren().addAll(topLabel,topField,botLabel,botField,doneButton,forgetErrorLabel);
+		root.getChildren().addAll(userLabel,userField,topLabel,topField,botLabel,botField,doneButton,forgetErrorLabel);
 		
-		Scene resetScene = new Scene(root,400,200);
+		Scene resetScene = new Scene(root,400,250);
 		
-		if (account!= null) applicationStage.setScene(resetScene);
+		if (accounts.size() != 0) applicationStage.setScene(resetScene);
 		else loginErrorLabel.setText("Error, no account to reset password for");
 	
 	}
@@ -174,7 +195,7 @@ public class LoginSceneController{
     	int rowCounter = 0;
     	while (rowCounter < accounts.size()) {
     		HBox userRow = new HBox();
-           	Label userLabel = new Label("User #" + (rowCounter+1) + " " + accounts.get(rowCounter).getUsername());  
+           	Label userLabel = new Label("User #" + (rowCounter+1) + ": " + accounts.get(rowCounter).getUsername());  
            	HBox.setMargin(userLabel, new Insets(0,50,0,50));
         	userRow.getChildren().addAll(userLabel);
         	allRows.getChildren().addAll(userRow);
@@ -186,12 +207,40 @@ public class LoginSceneController{
     	
 		Scene usersListScene = new Scene(allRows,250,70 + accounts.size() * 30);
 		
-		if (account!= null) applicationStage.setScene(usersListScene);
-		else loginErrorLabel.setText("Error, no account to reset username for");	
+		if (accounts.size() !=0) applicationStage.setScene(usersListScene);
+		else loginErrorLabel.setText("Error, no usernames registered");	
 	}
 	
+	void mainBankScene() {
+		Scene loginScene = applicationStage.getScene();
 		
-	
-	
+		//create the labels and the textfields
+		VBox root = new VBox(5);
+		Label userLabel = new Label("Username to reset password for");
+		TextField userField = new TextField();	
+		Label topLabel = new Label("New Password");
+		TextField topField = new TextField();	
+		TextField botField = new TextField();
+		Label botLabel = new Label("Confirm Password");
+		Label forgetErrorLabel = new Label("");
+		//create the button and let it have an action on event
+		Button doneButton = new Button("Done");
+		doneButton.setOnAction(doneEvent -> resetField(loginScene,topField.getText(),botField.getText(),forgetErrorLabel,"Passwords"));
+    		
+		//margins, order is top right bottom left in the (0,0,0,0)
+		VBox.setMargin(userLabel, new Insets(2,100,0,100));
+		VBox.setMargin(userField, new Insets(0,100,0,100));	
+		VBox.setMargin(topLabel, new Insets(2,100,0,100));
+		VBox.setMargin(topField, new Insets(0,100,0,100));	
+		VBox.setMargin(botLabel, new Insets(2,100,0,100));
+		VBox.setMargin(botField, new Insets(0,100,0,100));
+		VBox.setMargin(forgetErrorLabel, new Insets(10,25,0,85));
+		VBox.setMargin(doneButton, new Insets(10,100,0,175));
+		
+		root.getChildren().addAll(userLabel,userField,topLabel,topField,botLabel,botField,doneButton,forgetErrorLabel);
+		
+		Scene bankScene = new Scene(root,400,250);
+		applicationStage.setScene(bankScene);
+	}
 	
 }
