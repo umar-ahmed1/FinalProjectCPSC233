@@ -119,6 +119,8 @@ public class LoginSceneController{
 	}
 	
 	
+	
+	
 	/** 
      * Method that is called when the done button is pressed in the resetPasswordScene. Compares the two passwords inputted, if they are equal, changes the account password to the new password.
      * Then switches the scene back to the login scene.
@@ -139,6 +141,8 @@ public class LoginSceneController{
 		else if (newField.equals("") || newConfirmField.equals("")) errorMessage.setText("Error. One or more of the fields are blank");
 		else if (!newField.equals(newConfirmField)) errorMessage.setText(whichOne + " do not match. Please try again");
 	}
+	
+	
 	
 	/** 
      * Method that is called when the done button in the register scene is pressed. Tries to create an account if all parameters are valid (balance must be a string >= 0 and parsable to a double)
@@ -164,6 +168,9 @@ public class LoginSceneController{
 			
 	}
 
+	
+	
+	
 	/** 
      * Method that creates and changes the scene to the reset password scene when the forgot password button is pressed in the login scene.
      *  If the done button within this new register scene is pressed, the resetField method will be called.
@@ -205,6 +212,9 @@ public class LoginSceneController{
 	
 	}
 	
+	
+	
+	
 	/** 
      * Method that creates and changes the scene to the reset username scene when the forgot password button is pressed in the login scene.
      * This method will display all registered usernames to the user.
@@ -223,8 +233,6 @@ public class LoginSceneController{
     	Button doneButton = new Button("Done");
     	doneButton.setOnAction(doneEvent -> applicationStage.setScene(loginScene));
 		
-    	
-    	
     	//create a list to store all the quiz grades
     	int rowCounter = 0;
     	while (rowCounter < accounts.size()) {
@@ -246,6 +254,12 @@ public class LoginSceneController{
 	}
 	
 	
+	
+	
+	/** 
+     * Method called by loginButtonPressed that creates and changes the scene to the main bank scene. 
+     * This method will display the bank card, balance, contacts list, transaction history, and the ability to deposit withdraw or etransfer
+     */
 	void mainBankScene() {
 		Scene loginScene = applicationStage.getScene();
 		
@@ -324,8 +338,13 @@ public class LoginSceneController{
 		applicationStage.setScene(bankScene);
 	}
 
-
 	
+
+	/** 
+     * Method that creates and changes the scene to the deposit scene when the deposit button is pressed in the main bank scene.
+     *  If the done button within this new scene is pressed, the deposit method will be called.
+     * @param loggedInBalance (the label that displays the balance so that it can be updated when the deposit is made)
+     */
 	private void depositScene(Label loggedInBalance) {
 		Scene mainScene = applicationStage.getScene();
 		
@@ -351,7 +370,14 @@ public class LoginSceneController{
 	}
 
 
-	
+	/** 
+     * Method that is called when the done button in the deposit scene is pressed. Tries to deposit the amount if all parameters are valid (amount must be a string >= 0 and parsable to a double)
+     * If unable to deposit, displays appropriate error message thrown by the account constructor.
+     * @param amount (string of amount to be deposited into account)
+     * @param errorLabel (to show error messages)
+     * @param scene (the previous scene to return to when the method is done) 
+     * @param loggedInBalance (label to be updated to show new balance)  
+     */
 	private void deposit(String amount,Label errorLabel,Scene scene,Label loggedInBalance) {
 		errorLabel.setText("");
 		//Try to create a new account with the provided details
