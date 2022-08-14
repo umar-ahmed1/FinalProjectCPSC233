@@ -64,13 +64,11 @@ public class LoginSceneController{
 		
 			if (loginAccount != null && accounts.size()!= 0 && accounts != null) {
 				
-				if (loginAccount.compareToAllLogins(accounts)) {
-					loggedInAccount = loginAccount;
-					mainBankScene();
+				loggedInAccount = loginAccount.compareToAllLogins(accounts);
+				if (loggedInAccount != null) mainBankScene();
 					
 					//we are now logged in, create the bank scene
-					
-				}
+				
 				else loginErrorLabel.setText("Details do not match with registered account");
 				}
 			//if acc is null we want to set the error label to ask to create an account
@@ -224,42 +222,118 @@ public class LoginSceneController{
 		
 		//create the labels and the textfields
 		VBox root = new VBox();
-		root.setAlignment(Pos.CENTER);
+		root.setAlignment(Pos.TOP_CENTER);
 		Label forgetErrorLabel = new Label("");
 		Label welcomeLabel = new Label("Welcome To Your Account: " + loggedInAccount.getUsername());
-		
+		Label loggedInBalance = new Label("$" + loggedInAccount.getBalance());
 		
 		StackPane rectangleStack = new StackPane();
 		Label cardType = new Label("Chequing");
 		StackPane rectangleStack2 = new StackPane();
 		Label cardNumber = new Label(loggedInAccount.getCardNumber());
-		
 		//rectange x,y,width,height
 		Rectangle rectangleCard = new Rectangle(100,100,250,100);
 		rectangleCard.setFill(Color.rgb(0,151,230));
 		Rectangle rectangleCard2 = new Rectangle(100,250,250,50);
 		rectangleCard2.setFill(Color.rgb(151,230,255));
-		
-		rectangleStack.getChildren().addAll(rectangleCard,cardType);
+		rectangleStack.getChildren().addAll(rectangleCard,cardType,loggedInBalance);
 		rectangleStack2.getChildren().addAll(rectangleCard2,cardNumber);
-    		
+		
+		//Buttons
+		HBox buttons = new HBox(30);
+		Button depositButton = new Button("Deposit");
+		depositButton.setOnAction(doneEvent -> depositScene(loggedInBalance));
+		Button withdrawButton = new Button("Withdraw");
+		Button transferButton = new Button("eTransfer");
+		buttons.getChildren().addAll(depositButton,withdrawButton,transferButton);
+		
+		//Transfer List
+		VBox transferList = new VBox();
+		Label contacts = new Label ("E-Transfer Contacts");
+		transferList.getChildren().add(contacts);
+		//create a list to store all the quiz grades
+    	int rowCounter = 0;
+    	while (rowCounter < accounts.size()) {
+    		HBox userRow = new HBox();
+           	Label userLabel = new Label("User #" + (rowCounter+1) + ": " + accounts.get(rowCounter).getUsername());  
+           	HBox.setMargin(userLabel, new Insets(0,50,0,50));
+        	userRow.getChildren().addAll(userLabel);
+        	transferList.getChildren().addAll(userRow);
+        	rowCounter++;
+    	}
+		
+		//Transactions List
+		VBox transactionList = new VBox();
+		Label testLabel = new Label ("Transaction History");
+		transactionList.getChildren().addAll(testLabel);
+		
+		//e
+		HBox listsBox = new HBox(100);
+		listsBox.getChildren().addAll(transferList,transactionList);
+		
 		//margins, order is top right bottom left in the (0,0,0,0)
 		VBox.setMargin(forgetErrorLabel, new Insets(10,25,0,85));
 		VBox.setMargin(rectangleStack2, new Insets(0,0,0,50));
 		VBox.setMargin(rectangleStack,new Insets(25,0,0,50));
-		VBox.setMargin(welcomeLabel,new Insets(-200,0,0,0));
+		VBox.setMargin(welcomeLabel,new Insets(0,0,0,0));
+		VBox.setMargin(buttons,new Insets(0,0,0,50));
 		StackPane.setAlignment(cardType, Pos.TOP_LEFT);
 		StackPane.setAlignment(rectangleCard, Pos.TOP_LEFT);
 		StackPane.setAlignment(cardNumber, Pos.BOTTOM_LEFT);
 		StackPane.setAlignment(rectangleCard2, Pos.TOP_LEFT);
+		StackPane.setAlignment(loggedInBalance, Pos.CENTER_LEFT);
 		
 		welcomeLabel.setFont(new Font("Arial",30));
 		cardNumber.setFont(new Font("Arial", 15));
+		contacts.setFont(new Font("Arial", 15));
+		testLabel.setFont(new Font("Arial", 15));
+		loggedInBalance.setFont(new Font("Arial", 25));
 		
-		root.getChildren().addAll(welcomeLabel,rectangleStack,rectangleStack2,forgetErrorLabel);
+		root.getChildren().addAll(welcomeLabel,rectangleStack,rectangleStack2,buttons,listsBox,forgetErrorLabel);
 		
 		Scene bankScene = new Scene(root,800,500);
 		applicationStage.setScene(bankScene);
+	}
+
+
+	private void depositScene(Label loggedInBalance) {
+		Scene mainScene = applicationStage.getScene();
+		
+		//create the labels and the textfields
+		VBox root = new VBox(5);
+		Label amountLabel = new Label("Amount");
+		TextField amountField = new TextField();	
+		Label depositErrorLabel = new Label("");
+		//create the button and let it have an action on event
+		Button doneButton = new Button("Done");
+		doneButton.setOnAction(doneEvent -> deposit(amountField.getText(),depositErrorLabel,mainScene,loggedInBalance));
+    		
+		//margins, order is top right bottom left in the (0,0,0,0)
+		VBox.setMargin(amountLabel, new Insets(2,100,0,100));
+		VBox.setMargin(amountField, new Insets(0,100,0,100));	
+		VBox.setMargin(depositErrorLabel, new Insets(10,25,0,85));
+		VBox.setMargin(doneButton, new Insets(10,100,0,175));
+		
+		root.getChildren().addAll(amountLabel,amountField,doneButton,depositErrorLabel);
+		
+		Scene depositScene = new Scene(root,400,250);
+		applicationStage.setScene(depositScene);
+	}
+
+
+	private void deposit(String amount,Label errorLabel,Scene scene,Label loggedInBalance) {
+		errorLabel.setText("");
+		//Try to create a new account with the provided details
+		try {
+			loggedInAccount.deposit(amount);
+			applicationStage.setScene(scene);	
+			loggedInBalance.setText("$" + Double.toString(loggedInAccount.getBalance()));
+		//If an error occurs, the account class will determine why the error has occured and the account will not be created
+		//Instead, an error message will be displayed which the account constructor has thrown
+		} catch (InvalidBalanceException ige) {
+			errorLabel.setText(ige.getMessage());	
+		}
+		
 	}
 	
 }
