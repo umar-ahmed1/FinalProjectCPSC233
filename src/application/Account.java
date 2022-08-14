@@ -88,7 +88,7 @@ public class Account {
 		try {
 			if (Double.parseDouble(amount) >=0) balance += Double.parseDouble(amount);
 			//if the string is greater than max value but its valid throw an exception
-			else throw new InvalidBalanceException("Invalid balance. Entered value is less than 0.");
+			else throw new InvalidBalanceException("Invalid amount. Entered value is less than 0.");
 			}
 		//if the string is not able to be to converted to a double throw a number format exception that throws an invalid grade exception
 		catch (NumberFormatException e){
@@ -97,17 +97,17 @@ public class Account {
 			int counter = 0;
 		
 			if (amount.equals("")) {
-				errorMessage = ("Please enter a balance");
+				errorMessage = ("Please enter an amount");
 				}
 			for (char c : amount.toCharArray()) {
         		if (!Character.isDigit(c)) {
         			//If the character is not a decimal point
         			if (c != '.') {
-        				errorMessage = ("Balance should be a number. Don't include char: " + c);
+        				errorMessage = ("Amount should be a number. Don't include char: " + c);
         				}
         			if (c == '.') counter++;
         			if (counter >1) {
-        				errorMessage = ("Balance should be a number. Don't include multiple decimal points");
+        				errorMessage = ("Amount should be a number. Don't include multiple decimal points");
         				}
         			}
         		}

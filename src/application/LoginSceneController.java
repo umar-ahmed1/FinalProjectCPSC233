@@ -26,7 +26,6 @@ import javafx.stage.Stage;
 
 public class LoginSceneController{
 	Stage applicationStage;
-
 	public Account account;
 	public String errorMessage;
 	public ArrayList<Account> accounts = new ArrayList<Account>();
@@ -46,14 +45,14 @@ public class LoginSceneController{
 	@FXML
 	private Label loginErrorLabel;
 	
+	
 	/** 
-     * When login button is pressed, Checks if the values in the username and password are equal to the stored username and password values. If so prints a statement. 
-     * @param ?
-     * @return ?
-	 * @throws IOException 
+     * Method that is called whenever the login button is pressed. This method will compare the username and password in the textfields of the login screen to all accounts stored. 
+     * If the comparison returns true, the method will switch to the main bank scene. Else, it will return an appropriate error message.
+     * @param event (login button pressed in the login scene)
      */
 	@FXML
-	void loginButtonPressed(ActionEvent event) throws IOException {
+	void loginButtonPressed(ActionEvent event) {
 		loginErrorLabel.setText("");
 		for (Account acc : accounts) {
 			System.out.println("accx: " + acc.toString());
@@ -79,10 +78,11 @@ public class LoginSceneController{
 	}
 	
 	
+	
 	/** 
-     * Method that changes the scene to the register scene and creates an account based on the information provided. 
-     * @param no parameters
-     * @return no return
+     * Method that creates and changes the scene to the register scene when the register button is pressed in the login scene.
+     *  If the done button within this new register scene is pressed, the createAccount method will be called.
+     * @param swapToRegisterLayout (pressing the register button in the login screen)
      */
 	@FXML
 	void registerButtonPressedLoginScene(ActionEvent swapToRegisterLayout) throws IOException {	
@@ -118,6 +118,16 @@ public class LoginSceneController{
 		applicationStage.setScene(resetScene);	
 	}
 	
+	
+	/** 
+     * Method that is called when the done button is pressed in the resetPasswordScene. Compares the two passwords inputted, if they are equal, changes the account password to the new password.
+     * Then switches the scene back to the login scene.
+     * @param scene (the previous scene to return to when the method is done) 
+     * @param newField (String obtained from the first textfield)
+     * @param newConfirmField (String obtained from the second textfield)
+     * @param errorMessage (Label that an error message can be written to)
+     * @param whichOne //needs to be changed ***
+     */
 	void resetField(Scene scene, String newField, String newConfirmField, Label errorMessage,String whichOne) {
 		errorMessage.setText("");
 		
@@ -130,7 +140,15 @@ public class LoginSceneController{
 		else if (!newField.equals(newConfirmField)) errorMessage.setText(whichOne + " do not match. Please try again");
 	}
 	
-
+	/** 
+     * Method that is called when the done button in the register scene is pressed. Tries to create an account if all parameters are valid (balance must be a string >= 0 and parsable to a double)
+     * If unable to create account, displays appropriate error message thrown by the account constructor.
+     * @param scene (the previous scene to return to when the method is done) 
+     * @param user (the username to be registered)
+     * @param pass (the password to be registered) 
+     * @param bal (the balance to register) 
+     * @param errorLabel (to show error messages)
+     */
 	void createAccount(Scene scene, String user, String pass, String bal, Label errorLabel) {
 		errorLabel.setText("");
 		//Try to create a new account with the provided details
@@ -146,7 +164,11 @@ public class LoginSceneController{
 			
 	}
 
-	
+	/** 
+     * Method that creates and changes the scene to the reset password scene when the forgot password button is pressed in the login scene.
+     *  If the done button within this new register scene is pressed, the resetField method will be called.
+     * @param resetButtonPressed (pressing the forgot password button in the login screen)
+     */
 	@FXML
 	void resetPasswordScene(ActionEvent resetButtonPressed) throws IOException{
 		Scene loginScene = applicationStage.getScene();
@@ -183,6 +205,12 @@ public class LoginSceneController{
 	
 	}
 	
+	/** 
+     * Method that creates and changes the scene to the reset username scene when the forgot password button is pressed in the login scene.
+     * This method will display all registered usernames to the user.
+     * If the done button within this new scene is pressed, return to the login scene.
+     * @param resetButtonPressed (pressing the forgot username button in the login screen)
+     */
 	@FXML
 	void resetUsernameScene(ActionEvent resetButtonPressed) throws IOException{
 		Scene loginScene = applicationStage.getScene();
@@ -216,6 +244,7 @@ public class LoginSceneController{
 		if (accounts.size() !=0) applicationStage.setScene(usersListScene);
 		else loginErrorLabel.setText("Error, no usernames registered");	
 	}
+	
 	
 	void mainBankScene() {
 		Scene loginScene = applicationStage.getScene();
@@ -296,6 +325,7 @@ public class LoginSceneController{
 	}
 
 
+	
 	private void depositScene(Label loggedInBalance) {
 		Scene mainScene = applicationStage.getScene();
 		
@@ -311,16 +341,17 @@ public class LoginSceneController{
 		//margins, order is top right bottom left in the (0,0,0,0)
 		VBox.setMargin(amountLabel, new Insets(2,100,0,100));
 		VBox.setMargin(amountField, new Insets(0,100,0,100));	
-		VBox.setMargin(depositErrorLabel, new Insets(10,25,0,85));
+		VBox.setMargin(depositErrorLabel, new Insets(10,25,0,25));
 		VBox.setMargin(doneButton, new Insets(10,100,0,175));
 		
 		root.getChildren().addAll(amountLabel,amountField,doneButton,depositErrorLabel);
 		
-		Scene depositScene = new Scene(root,400,250);
+		Scene depositScene = new Scene(root,450,150);
 		applicationStage.setScene(depositScene);
 	}
 
 
+	
 	private void deposit(String amount,Label errorLabel,Scene scene,Label loggedInBalance) {
 		errorLabel.setText("");
 		//Try to create a new account with the provided details
