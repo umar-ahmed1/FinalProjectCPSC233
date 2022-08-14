@@ -12,10 +12,15 @@ public class Account {
 	
 	
 	//Default constructor
-	public Account(String usernameInput, String passwordInput, String balanceInput) throws InvalidBalanceException {
+	public Account(String usernameInput, String passwordInput, String balanceInput,ArrayList<Account> accounts) throws InvalidBalanceException {
 		
 		if (!usernameInput.equals("")) username = usernameInput;
 		else throw new InvalidBalanceException("Please enter a username");
+		//check to see if the username input is equal to any username already created, if so throw an exception
+		for (Account account : accounts) {
+			if (usernameInput.equals(account.getUsername())) throw new InvalidBalanceException ("Username is already taken");
+		}
+		
 		if (!passwordInput.equals("")) password = passwordInput;
 		else throw new InvalidBalanceException("Please enter a password");
 		
@@ -65,19 +70,16 @@ public class Account {
 	this.password = toCopy.getPassword();
 	}
 	
-	//method to compare two accounts
-	public boolean compareLoginDetails(Account other) {
-		if (this.getUsername().equals(other.getUsername()) && this.getPassword().equals(other.getPassword())) return true;
-		else return false;
-	}
 	
 	//method to compare given username/pass to all username pass
 	public boolean compareToAllLogins(ArrayList<Account> accounts) {
 		for (Account account : accounts) {
-			if (this.compareLoginDetails(account)) return true;
+			if (this.getUsername().equals(account.getUsername()) && this.getPassword().equals(account.getPassword())) return true;
 		}
 		return false;
 	}
+	
+	
 
 	
 	//Getter and setter for password 

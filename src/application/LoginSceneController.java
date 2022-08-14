@@ -129,7 +129,7 @@ public class LoginSceneController{
 		errorLabel.setText("");
 		//Try to create a new account with the provided details
 		try {
-			account = new Account(user,pass,bal);
+			account = new Account(user,pass,bal,accounts);
 			accounts.add(account);
 			applicationStage.setScene(scene);	
 		//If an error occurs, the account class will determine why the error has occured and the account will not be created
