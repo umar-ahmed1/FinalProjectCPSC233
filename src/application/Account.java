@@ -107,7 +107,7 @@ public class Account {
 
 	@Override
 	public String toString() {
-		return "username: " + this.getUsername() + "password: " + this.getPassword() + "card no: " + this.cardNumber;
+		return "username:" + this.getUsername() + " password:" + this.getPassword() + " card no:" + this.cardNumber + " balance:" + this.balance;
 	}
 	
 

@@ -51,6 +51,7 @@ public class LoginSceneController{
 		for (Account acc : accounts) {
 			System.out.println("accx: " + acc.toString());
 		}
+		System.out.println("-----------------------------------------------------------");
 		
 		Account loginAccount = new Account(usernameLoginField.getText(),passwordLoginField.getText());
 		
@@ -102,7 +103,7 @@ public class LoginSceneController{
 		VBox.setMargin(passField, new Insets(0,100,0,100));
 		VBox.setMargin(balLabel, new Insets(10,100,0,100));
 		VBox.setMargin(balField, new Insets(0,100,0,100));
-		VBox.setMargin(errorLabel, new Insets(10,50,0,75));
+		VBox.setMargin(errorLabel, new Insets(10,10,0,25));
 		VBox.setMargin(doneButton, new Insets(10,100,0,175));
 		
 		root.getChildren().addAll(userLabel,userField,passLabel,passField,balLabel,balField,errorLabel,doneButton);
