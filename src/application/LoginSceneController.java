@@ -9,12 +9,19 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 public class LoginSceneController{
@@ -58,7 +65,8 @@ public class LoginSceneController{
 			if (loginAccount != null && accounts.size()!= 0 && accounts != null) {
 				
 				if (loginAccount.compareToAllLogins(accounts)) {
-					loggedInAccount = account;
+					loggedInAccount = loginAccount;
+					mainBankScene();
 					
 					//we are now logged in, create the bank scene
 					
@@ -215,31 +223,42 @@ public class LoginSceneController{
 		Scene loginScene = applicationStage.getScene();
 		
 		//create the labels and the textfields
-		VBox root = new VBox(5);
-		Label userLabel = new Label("Username to reset password for");
-		TextField userField = new TextField();	
-		Label topLabel = new Label("New Password");
-		TextField topField = new TextField();	
-		TextField botField = new TextField();
-		Label botLabel = new Label("Confirm Password");
+		VBox root = new VBox();
+		root.setAlignment(Pos.CENTER);
 		Label forgetErrorLabel = new Label("");
-		//create the button and let it have an action on event
-		Button doneButton = new Button("Done");
-		doneButton.setOnAction(doneEvent -> resetField(loginScene,topField.getText(),botField.getText(),forgetErrorLabel,"Passwords"));
+		Label welcomeLabel = new Label("Welcome To Your Account: " + loggedInAccount.getUsername());
+		
+		
+		StackPane rectangleStack = new StackPane();
+		Label cardType = new Label("Chequing");
+		StackPane rectangleStack2 = new StackPane();
+		Label cardNumber = new Label(loggedInAccount.getCardNumber());
+		
+		//rectange x,y,width,height
+		Rectangle rectangleCard = new Rectangle(100,100,250,100);
+		rectangleCard.setFill(Color.rgb(0,151,230));
+		Rectangle rectangleCard2 = new Rectangle(100,250,250,50);
+		rectangleCard2.setFill(Color.rgb(151,230,255));
+		
+		rectangleStack.getChildren().addAll(rectangleCard,cardType);
+		rectangleStack2.getChildren().addAll(rectangleCard2,cardNumber);
     		
 		//margins, order is top right bottom left in the (0,0,0,0)
-		VBox.setMargin(userLabel, new Insets(2,100,0,100));
-		VBox.setMargin(userField, new Insets(0,100,0,100));	
-		VBox.setMargin(topLabel, new Insets(2,100,0,100));
-		VBox.setMargin(topField, new Insets(0,100,0,100));	
-		VBox.setMargin(botLabel, new Insets(2,100,0,100));
-		VBox.setMargin(botField, new Insets(0,100,0,100));
 		VBox.setMargin(forgetErrorLabel, new Insets(10,25,0,85));
-		VBox.setMargin(doneButton, new Insets(10,100,0,175));
+		VBox.setMargin(rectangleStack2, new Insets(0,0,0,50));
+		VBox.setMargin(rectangleStack,new Insets(25,0,0,50));
+		VBox.setMargin(welcomeLabel,new Insets(-200,0,0,0));
+		StackPane.setAlignment(cardType, Pos.TOP_LEFT);
+		StackPane.setAlignment(rectangleCard, Pos.TOP_LEFT);
+		StackPane.setAlignment(cardNumber, Pos.BOTTOM_LEFT);
+		StackPane.setAlignment(rectangleCard2, Pos.TOP_LEFT);
 		
-		root.getChildren().addAll(userLabel,userField,topLabel,topField,botLabel,botField,doneButton,forgetErrorLabel);
+		welcomeLabel.setFont(new Font("Arial",30));
+		cardNumber.setFont(new Font("Arial", 15));
 		
-		Scene bankScene = new Scene(root,400,250);
+		root.getChildren().addAll(welcomeLabel,rectangleStack,rectangleStack2,forgetErrorLabel);
+		
+		Scene bankScene = new Scene(root,800,500);
 		applicationStage.setScene(bankScene);
 	}
 	

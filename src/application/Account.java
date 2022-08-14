@@ -6,7 +6,7 @@ import java.util.Random;
 public class Account {
 	private String username;
 	private String password;
-	private Double balance;
+	private Double balance = 0.0;
 	private Integer cardNumber;
 	Random random = new Random();
 	
@@ -79,6 +79,16 @@ public class Account {
 		return false;
 	}
 	
+	public void withdraw(Double amount) {
+		if (amount <= this.getBalance()) balance -= amount;
+	}
+	public void deposit(Double amount) {
+		balance += amount;
+	}
+	
+	public void transfer(Double amount, Account transferTo) {
+		if (amount <= this.getBalance()) transferTo.deposit(amount);
+	}
 	
 
 	
@@ -107,6 +117,9 @@ public class Account {
 	@Override
 	public String toString() {
 		return "username:" + this.getUsername() + " password:" + this.getPassword() + " card no:" + this.cardNumber + " balance:" + this.balance;
+	}
+	public String getCardNumber() {
+		return Integer.toString(cardNumber);
 	}
 	
 
