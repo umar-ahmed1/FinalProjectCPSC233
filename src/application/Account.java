@@ -22,13 +22,40 @@ public class Account {
 		try {
 			if (Double.parseDouble(balanceInput) >=0) balance = Double.parseDouble(balanceInput);
 			//if the string is greater than max value but its valid throw an exception
-			else throw new InvalidBalanceException("Error, entered value is less than 0. Exception thrown by constructor");
+			else throw new InvalidBalanceException("Invalid balance. Entered value is less than 0.");
 		}
-		//if the string is not able to be tconverted to a double throw a numberformatexception that throws an invalid grade exception
+		//if the string is not able to be to converted to a double throw a numberformatexception that throws an invalid grade exception
 		catch (NumberFormatException e){
-			throw new InvalidBalanceException("Error, can't convert String passed to double. Exception was thrown by constructor");
-		}
+			//want to figure out why the balance is invalid, so we do some checking here
+			String errorMessage = "";
+			boolean validBal = true;
+			int counter = 0;
 		
+			for (char c : balanceInput.toCharArray()) {
+        		if (!Character.isDigit(c)) {
+        			//If the character is not a decimal point
+        			if (c != '.') {
+        				errorMessage = ("Balance should be a number. Don't include char: " + c);
+        				validBal = false;
+        			}
+        			if (c == '.') counter++;
+        			if (counter >1) {
+        				errorMessage = ("Balance should be a number. Don't include multiple decimal points");
+        				validBal = false;
+        			}
+        		}
+        	}
+			if (validBal) {
+		
+				if (Double.parseDouble(balanceInput) <= 0) {
+					errorMessage = ("Entered grade lower than 0. Grade should be a number between 0-10");
+					
+				}
+			}
+			throw new InvalidBalanceException(errorMessage);
+		
+		
+		}
 	}
 	//constructor that just has username password
 	public Account(String usernameInput, String passwordInput) {

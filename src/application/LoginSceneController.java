@@ -102,7 +102,7 @@ public class LoginSceneController{
 		VBox.setMargin(passField, new Insets(0,100,0,100));
 		VBox.setMargin(balLabel, new Insets(10,100,0,100));
 		VBox.setMargin(balField, new Insets(0,100,0,100));
-		VBox.setMargin(errorLabel, new Insets(10,100,0,100));
+		VBox.setMargin(errorLabel, new Insets(10,50,0,75));
 		VBox.setMargin(doneButton, new Insets(10,100,0,175));
 		
 		root.getChildren().addAll(userLabel,userField,passLabel,passField,balLabel,balField,errorLabel,doneButton);
@@ -131,7 +131,8 @@ public class LoginSceneController{
 			accounts.add(account);
 			applicationStage.setScene(scene);	
 		} catch (InvalidBalanceException ige) {
-			errorLabel.setText("Invalid balance entered");
+			
+			errorLabel.setText(ige.getMessage());
 			
 		}
 			
