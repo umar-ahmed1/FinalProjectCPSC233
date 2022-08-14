@@ -57,7 +57,7 @@ public class LoginSceneController{
 		
 			if (loginAccount != null && accounts.size()!= 0 && accounts != null) {
 				
-				if (loginAccount.compareToStoredAccounts(accounts)) {
+				if (loginAccount.compareToAllLogins(accounts)) {
 					loggedInAccount = account;
 					
 					//we are now logged in, create the bank scene
@@ -127,17 +127,18 @@ public class LoginSceneController{
 
 	void createAccount(Scene scene, String user, String pass, String bal, Label errorLabel) {
 		errorLabel.setText("");
+		//Try to create a new account with the provided details
 		try {
 			account = new Account(user,pass,bal);
 			accounts.add(account);
 			applicationStage.setScene(scene);	
+		//If an error occurs, the account class will determine why the error has occured and the account will not be created
+		//Instead, an error message will be displayed which the account constructor has thrown
 		} catch (InvalidBalanceException ige) {
-			
-			errorLabel.setText(ige.getMessage());
-			
+			errorLabel.setText(ige.getMessage());	
 		}
 			
-		}
+	}
 
 	
 	@FXML
