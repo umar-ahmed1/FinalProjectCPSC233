@@ -22,7 +22,7 @@ public class Main extends Application {
 			LoginSceneController controller = (LoginSceneController) loader.getController();
 			controller.applicationStage = primaryStage;
 			//set the primary stage
-			Scene scene = new Scene(root,400,400);
+			Scene scene = new Scene(root,400,300);
 			primaryStage.setScene(scene);
 			primaryStage.setTitle("Umars final project");
 			primaryStage.show(); 
