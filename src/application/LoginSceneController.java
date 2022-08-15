@@ -345,21 +345,24 @@ public class LoginSceneController{
 		
 		//create the labels,textfields, and button
 		VBox root = new VBox(5);
+		root.setAlignment(Pos.CENTER);
 		Label amountLabel = new Label("Amount");
 		TextField amountField = new TextField();	
+		Label deposit = new Label("Deposit");
 		Label depositErrorLabel = new Label("");
 		Button doneButton = new Button("Done");
 		doneButton.setOnAction(doneEvent -> depositOrWithdraw(amountField.getText(),depositErrorLabel,mainScene,loggedInBalance,"Deposit"));
     		
 		//margins, order is top right bottom left in the (0,0,0,0)
-		VBox.setMargin(amountLabel, new Insets(2,100,0,100));
-		VBox.setMargin(amountField, new Insets(0,100,0,100));	
-		VBox.setMargin(depositErrorLabel, new Insets(10,25,0,25));
-		VBox.setMargin(doneButton, new Insets(10,100,0,175));
+		VBox.setMargin(amountLabel, new Insets(2,0,0,0));
+		VBox.setMargin(amountField, new Insets(0,150,0,150));	
+		VBox.setMargin(depositErrorLabel, new Insets(10,0,0,0));
+		VBox.setMargin(doneButton, new Insets(10,0,0,0));
+		deposit.setFont(new Font("Arial", 20));
 		
 		//add all elements to the scene and set the application stage scene to this new scene
-		root.getChildren().addAll(amountLabel,amountField,doneButton,depositErrorLabel);
-		Scene depositScene = new Scene(root,450,150);
+		root.getChildren().addAll(deposit,amountLabel,amountField,doneButton,depositErrorLabel);
+		Scene depositScene = new Scene(root,450,175);
 		applicationStage.setScene(depositScene);
 	}
 
@@ -373,6 +376,8 @@ public class LoginSceneController{
 		
 		//create the labels,textfields, and button
 		VBox root = new VBox(5);
+		root.setAlignment(Pos.CENTER);
+		Label withdraw = new Label("Withdraw");
 		Label amountLabel = new Label("Amount");
 		TextField amountField = new TextField();	
 		Label withdrawErrorLabel = new Label("");
@@ -380,14 +385,15 @@ public class LoginSceneController{
 		doneButton.setOnAction(doneEvent -> depositOrWithdraw(amountField.getText(),withdrawErrorLabel,mainScene,loggedInBalance,"Withdraw"));
     		
 		//margins, order is top right bottom left in the (0,0,0,0)
-		VBox.setMargin(amountLabel, new Insets(2,100,0,100));
-		VBox.setMargin(amountField, new Insets(0,100,0,100));	
-		VBox.setMargin(withdrawErrorLabel, new Insets(10,25,0,25));
-		VBox.setMargin(doneButton, new Insets(10,100,0,175));
+		VBox.setMargin(amountLabel, new Insets(2,0,0,0));
+		VBox.setMargin(amountField, new Insets(0,150,0,150));	
+		VBox.setMargin(withdrawErrorLabel, new Insets(10,0,0,0));
+		VBox.setMargin(doneButton, new Insets(10,0,0,0));
+		withdraw.setFont(new Font("Arial", 20));
 		
 		//add all elements to the scene and set the application stage scene to this new scene
-		root.getChildren().addAll(amountLabel,amountField,doneButton,withdrawErrorLabel);
-		Scene withdrawScene = new Scene(root,450,150);
+		root.getChildren().addAll(withdraw,amountLabel,amountField,doneButton,withdrawErrorLabel);
+		Scene withdrawScene = new Scene(root,450,175);
 		applicationStage.setScene(withdrawScene);
 	}
 	
