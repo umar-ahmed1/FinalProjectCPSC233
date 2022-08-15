@@ -25,6 +25,7 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 public class LoginSceneController{
+	//instance variables
 	Stage applicationStage;
 	public Account account;
 	public String errorMessage;
@@ -35,15 +36,13 @@ public class LoginSceneController{
 	
 	@FXML
 	private TextField usernameLoginField;
-	
 	@FXML
 	private TextField passwordLoginField;
-	
 	@FXML
 	private Label registrationErrorMessage;
-	
 	@FXML
 	private Label loginErrorLabel;
+	
 	
 	
 	/** 
@@ -54,28 +53,24 @@ public class LoginSceneController{
 	@FXML
 	void loginButtonPressed(ActionEvent event) {
 		loginErrorLabel.setText("");
-		for (Account acc : accounts) {
-			System.out.println("accx: " + acc.toString());
-		}
-		System.out.println("-----------------------------------------------------------");
-		
+		//create an account based off the username and password fields in login, (dont assign it a balance as we are only using it to confirm login details)
 		Account loginAccount = new Account(usernameLoginField.getText(),passwordLoginField.getText());
-		
+			//if nothing is null (no errors) and there is atleast one account created
 			if (loginAccount != null && accounts.size()!= 0 && accounts != null) {
-				
+				//compare the account from the login fields to all accounts registered, if it has a username password equal to any of the accounts in the list
+				//the account in the list will be returned, and we can check to see that by asking if loggedInAccount is null or not
 				loggedInAccount = loginAccount.compareToAllLogins(accounts);
+				//if it is not null set the scene to the bank scene
 				if (loggedInAccount != null) mainBankScene();
-					
-					//we are now logged in, create the bank scene
-				
+				//else display appropriate error messages
 				else loginErrorLabel.setText("Details do not match with registered account");
 				}
-			//if acc is null we want to set the error label to ask to create an account
+			//if no account exists ask user to create account via an error message
 			else {
 				loginErrorLabel.setText("Create an account before logging in");
-			}
-			
+			}	
 	}
+	
 	
 	
 	
@@ -88,7 +83,7 @@ public class LoginSceneController{
 	void registerButtonPressedLoginScene(ActionEvent swapToRegisterLayout) throws IOException {	
 		Scene loginScene = applicationStage.getScene();
 		
-		//create the labels and the textfields
+		//create the labels,textfields, and the button
 		VBox root = new VBox(5);
 		Label userLabel = new Label("Username");
 		TextField userField = new TextField();	
@@ -97,8 +92,6 @@ public class LoginSceneController{
 		TextField balField = new TextField();
 		Label balLabel = new Label("Initial deposit");
 		Label errorLabel = new Label("");
-		
-		//create the button and let it have an action on event
 		Button doneButton = new Button("Done");
 		doneButton.setOnAction(doneEvent -> createAccount(loginScene, userField.getText(),passField.getText(),balField.getText(),errorLabel));
     	
@@ -112,8 +105,8 @@ public class LoginSceneController{
 		VBox.setMargin(errorLabel, new Insets(10,10,0,25));
 		VBox.setMargin(doneButton, new Insets(10,100,0,175));
 		
+		//add elements to root and create and set the scene to the new scene
 		root.getChildren().addAll(userLabel,userField,passLabel,passField,balLabel,balField,errorLabel,doneButton);
-		
 		Scene resetScene = new Scene(root,400,300);	
 		applicationStage.setScene(resetScene);	
 	}
@@ -132,13 +125,15 @@ public class LoginSceneController{
      */
 	void resetField(Scene scene, String newField, String newConfirmField, Label errorMessage,String whichOne) {
 		errorMessage.setText("");
-		
+		//if the two fields match, then change the password
 		if (newField.equals(newConfirmField)){
 			if (whichOne.equals("Usernames")) this.account.setUsername(newField);
 			if (whichOne.equals("Passwords")) this.account.setPassword(newField);
 			applicationStage.setScene(scene);
-		}		
+		}
+		//if any of the fields are blank then set an appropriate error message
 		else if (newField.equals("") || newConfirmField.equals("")) errorMessage.setText("Error. One or more of the fields are blank");
+		//if the two fields do not match, then set an appropriate error message
 		else if (!newField.equals(newConfirmField)) errorMessage.setText(whichOne + " do not match. Please try again");
 	}
 	
@@ -203,13 +198,11 @@ public class LoginSceneController{
 		VBox.setMargin(forgetErrorLabel, new Insets(10,25,0,85));
 		VBox.setMargin(doneButton, new Insets(10,100,0,175));
 		
+		//add all the elements to root, create the scene, and as long as there is atleast one account registered, set the scene to the new scene, otherwise display an error
 		root.getChildren().addAll(userLabel,userField,topLabel,topField,botLabel,botField,doneButton,forgetErrorLabel);
-		
 		Scene resetScene = new Scene(root,400,250);
-		
 		if (accounts.size() != 0) applicationStage.setScene(resetScene);
-		else loginErrorLabel.setText("Error, no account to reset password for");
-	
+		else loginErrorLabel.setText("Error, no account to reset password for");	
 	}
 	
 	
@@ -225,7 +218,7 @@ public class LoginSceneController{
 	void resetUsernameScene(ActionEvent resetButtonPressed) throws IOException{
 		Scene loginScene = applicationStage.getScene();
 		
-    	//create the scene
+    	//create the labels,textfields,buttons
     	VBox allRows = new VBox();
     	Label topLabel = new Label("All registered usernames:");
     	allRows.getChildren().add(topLabel);
@@ -243,12 +236,12 @@ public class LoginSceneController{
         	allRows.getChildren().addAll(userRow);
         	rowCounter++;
     	}
-    	
     	allRows.getChildren().add(doneButton);
     	VBox.setMargin(doneButton, new Insets(10,50,0,50));
     	
+    	//create the scene, length of scene is based on how many accounts are registered, set the scene to the new scene if atleast 1 account is registered
+    	//otherwise dislay an error message.
 		Scene usersListScene = new Scene(allRows,250,70 + accounts.size() * 30);
-		
 		if (accounts.size() !=0) applicationStage.setScene(usersListScene);
 		else loginErrorLabel.setText("Error, no usernames registered");	
 	}
