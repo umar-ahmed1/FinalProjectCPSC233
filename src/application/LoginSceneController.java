@@ -347,7 +347,11 @@ public class LoginSceneController{
 	}
 
 	
-
+	
+	/** 
+     * Method called by eTransfer button in main bank scene that creates and changes the scene to the transfer. 
+     * This method will ask for a username and amount in textfields and upon the done button being pressed will call the eTransfer method.
+     */
 	private void transferSceneCreator(Label loggedInBalanceLabel) {
 		Scene mainScene = applicationStage.getScene();
 		
@@ -374,11 +378,20 @@ public class LoginSceneController{
 		//add all elements to the scene and set the application stage scene to this new scene
 		root.getChildren().addAll(titleLabel,userToTransferToLabel,userToTransferToField,amountLabel,amountField,doneButton,transferErrorLabel);
 		Scene transferScene = new Scene(root,450,250);
-		applicationStage.setScene(transferScene);
-		
-		
+		applicationStage.setScene(transferScene);	
 	}
 
+	
+	/** 
+     * Method that is called when the done button in the etransfer scene is pressed. 
+     * Tries to transfer the amount passed to userToTransferTo if all given parameters are valid.
+     * If unable to transfer, displays appropriate error message thrown by the account constructor.
+     * @param loggedInBalanceLabel (label to be updated to show new balance)
+     * @param userToTransferTo (the username of the account that will recieve the transfer
+     * @param errorLabel (to show error messages)
+     * @param mainScene (the previous scene to return to when the method is done) 
+     * @param amount (string of amount to be deposited into account)
+     */
 	public void eTransfer(Label loggedInBalanceLabel, String userToTransferTo, Label errorLabel, Scene mainScene,String amount) {
 		errorLabel.setText("");
 		System.out.println("logged user:" + loggedInAccount.getUsername());
@@ -410,6 +423,7 @@ public class LoginSceneController{
 		}
 	}
 
+	
 
 	/** 
      * Method that creates and changes the scene to the deposit scene when the deposit button is pressed in the main bank scene.
@@ -442,6 +456,8 @@ public class LoginSceneController{
 		applicationStage.setScene(depositScene);
 	}
 
+	
+	
 	/** 
      * Method that creates and changes the scene to the withdraw scene when the withdraw button is pressed in the main bank scene.
      *  If the done button within this new scene is pressed, the depositOrWithdraw method will be called.

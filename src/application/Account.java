@@ -188,9 +188,10 @@ public class Account {
 	
 	
 	/** 
-    * Method that validates a string input and converts it to a double, then it withdraws the input from this account and deposits it into transferTo..
+    * Method that validates a string input and converts it to a double, then it withdraws the input from this account and deposits it into transferTo.
     * Otherwise an appropriate error message is displayed
     * @param amount (to be transferred)
+    * @param toTransferTo (the account that the amount should be deposited into)
     */
 	public void transfer(String amount, Account toTransferTo) throws InvalidBalanceException {
 		try {
