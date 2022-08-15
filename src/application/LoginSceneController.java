@@ -29,9 +29,8 @@ public class LoginSceneController{
 	Stage applicationStage;
 	public Account account;
 	public String errorMessage;
-	public ArrayList<Account> accounts = new ArrayList<Account>();
+	public ArrayList<Account> accountsList = new ArrayList<Account>();
 	boolean registerable = true;
-	public String passwordToReferTo;
 	public Account loggedInAccount;
 	
 	@FXML
@@ -54,17 +53,22 @@ public class LoginSceneController{
 	void loginButtonPressed(ActionEvent event) {
 		loginErrorLabel.setText("");
 		//create an account based off the username and password fields in login, (dont assign it a balance as we are only using it to confirm login details)
-		Account loginAccount = new Account(usernameLoginField.getText(),passwordLoginField.getText());
+		Account temporaryloginAccount = new Account(usernameLoginField.getText(),passwordLoginField.getText());
+		
 			//if nothing is null (no errors) and there is atleast one account created
-			if (loginAccount != null && accounts.size()!= 0 && accounts != null) {
+			if (temporaryloginAccount != null && accountsList.size()!= 0 && accountsList != null) {
 				//compare the account from the login fields to all accounts registered, if it has a username password equal to any of the accounts in the list
 				//the account in the list will be returned, and we can check to see that by asking if loggedInAccount is null or not
-				loggedInAccount = loginAccount.compareToAllLogins(accounts);
+				loggedInAccount = temporaryloginAccount.compareToAllLogins(accountsList);
 				//if it is not null set the scene to the bank scene
-				if (loggedInAccount != null) mainBankScene();
-				//else display appropriate error messages
-				else loginErrorLabel.setText("Details do not match with registered account");
+				if (loggedInAccount != null) { 
+					mainBankScene();
 				}
+				//else display appropriate error messages
+				else {
+					loginErrorLabel.setText("Details do not match with registered account");
+				}
+			}
 			//if no account exists ask user to create account via an error message
 			else {
 				loginErrorLabel.setText("Create an account before logging in");
@@ -121,20 +125,20 @@ public class LoginSceneController{
      * @param newField (String obtained from the first textfield)
      * @param newConfirmField (String obtained from the second textfield)
      * @param errorMessage (Label that an error message can be written to)
-     * @param whichOne //needs to be changed ***
+     * @param identifier //needs to be changed ***
      */
-	void resetField(Scene scene, String newField, String newConfirmField, Label errorMessage,String whichOne) {
+	void resetField(Scene scene, String newField, String newConfirmField, Label errorMessage,String identifier) {
 		errorMessage.setText("");
 		//if the two fields match, then change the password
 		if (newField.equals(newConfirmField)){
-			if (whichOne.equals("Usernames")) this.account.setUsername(newField);
-			if (whichOne.equals("Passwords")) this.account.setPassword(newField);
+			if (identifier.equals("Usernames")) this.account.setUsername(newField);
+			if (identifier.equals("Passwords")) this.account.setPassword(newField);
 			applicationStage.setScene(scene);
 		}
 		//if any of the fields are blank then set an appropriate error message
 		else if (newField.equals("") || newConfirmField.equals("")) errorMessage.setText("Error. One or more of the fields are blank");
 		//if the two fields do not match, then set an appropriate error message
-		else if (!newField.equals(newConfirmField)) errorMessage.setText(whichOne + " do not match. Please try again");
+		else if (!newField.equals(newConfirmField)) errorMessage.setText(identifier + " do not match. Please try again");
 	}
 	
 	
@@ -152,8 +156,8 @@ public class LoginSceneController{
 		errorLabel.setText("");
 		//Try to create a new account with the provided details
 		try {
-			account = new Account(user,pass,bal,accounts);
-			accounts.add(account);
+			account = new Account(user,pass,bal,accountsList);
+			accountsList.add(account);
 			applicationStage.setScene(scene);	
 		//If an error occurs, the account class will determine why the error has occured and the account will not be created
 		//Instead, an error message will be displayed which the account constructor has thrown
@@ -184,7 +188,7 @@ public class LoginSceneController{
 		TextField botField = new TextField();
 		Label botLabel = new Label("Confirm Password");
 		Label forgetErrorLabel = new Label("");
-		//create the button and let it have an action on event
+		//create the button and set it to reset the password
 		Button doneButton = new Button("Done");
 		doneButton.setOnAction(doneEvent -> resetField(loginScene,topField.getText(),botField.getText(),forgetErrorLabel,"Passwords"));
     		
@@ -201,7 +205,7 @@ public class LoginSceneController{
 		//add all the elements to root, create the scene, and as long as there is atleast one account registered, set the scene to the new scene, otherwise display an error
 		root.getChildren().addAll(userLabel,userField,topLabel,topField,botLabel,botField,doneButton,forgetErrorLabel);
 		Scene resetScene = new Scene(root,400,250);
-		if (accounts.size() != 0) applicationStage.setScene(resetScene);
+		if (accountsList.size() != 0) applicationStage.setScene(resetScene);
 		else loginErrorLabel.setText("Error, no account to reset password for");	
 	}
 	
@@ -224,13 +228,14 @@ public class LoginSceneController{
     	allRows.getChildren().add(topLabel);
     	VBox.setMargin(topLabel, new Insets(10,50,0,50));
     	Button doneButton = new Button("Done");
+    	//if done button is pressed, return to the previous scene (loginScene)
     	doneButton.setOnAction(doneEvent -> applicationStage.setScene(loginScene));
 		
-    	//create a list to store all the quiz grades
+    	//create a list to store all the usernames
     	int rowCounter = 0;
-    	while (rowCounter < accounts.size()) {
+    	while (rowCounter < accountsList.size()) {
     		HBox userRow = new HBox();
-           	Label userLabel = new Label("User #" + (rowCounter+1) + ": " + accounts.get(rowCounter).getUsername());  
+           	Label userLabel = new Label("User #" + (rowCounter+1) + ": " + accountsList.get(rowCounter).getUsername());  
            	HBox.setMargin(userLabel, new Insets(0,50,0,50));
         	userRow.getChildren().addAll(userLabel);
         	allRows.getChildren().addAll(userRow);
@@ -241,8 +246,8 @@ public class LoginSceneController{
     	
     	//create the scene, length of scene is based on how many accounts are registered, set the scene to the new scene if atleast 1 account is registered
     	//otherwise dislay an error message.
-		Scene usersListScene = new Scene(allRows,250,70 + accounts.size() * 30);
-		if (accounts.size() !=0) applicationStage.setScene(usersListScene);
+		Scene usersListScene = new Scene(allRows,250,70 + accountsList.size() * 30);
+		if (accountsList.size() !=0) applicationStage.setScene(usersListScene);
 		else loginErrorLabel.setText("Error, no usernames registered");	
 	}
 	
@@ -260,7 +265,7 @@ public class LoginSceneController{
 		root.setAlignment(Pos.TOP_CENTER);
 		Label forgetErrorLabel = new Label("");
 		Label welcomeLabel = new Label("Welcome To Your Account: " + loggedInAccount.getUsername());
-		Label loggedInBalance = new Label("$" + loggedInAccount.getBalance());
+		Label loggedInBalanceLabel = new Label("$" + loggedInAccount.getBalance());
 		
 		//rectangle and their stack panes. rectangle creation is (x,y,width,height)
 		StackPane rectangleStack = new StackPane();
@@ -271,28 +276,30 @@ public class LoginSceneController{
 		rectangleCard.setFill(Color.rgb(0,151,230));
 		Rectangle rectangleCard2 = new Rectangle(100,250,250,50);
 		rectangleCard2.setFill(Color.rgb(151,230,255));
-		rectangleStack.getChildren().addAll(rectangleCard,cardType,loggedInBalance);
+		rectangleStack.getChildren().addAll(rectangleCard,cardType,loggedInBalanceLabel);
 		rectangleStack2.getChildren().addAll(rectangleCard2,cardNumber);
 		
 		//Buttons
 		HBox buttons = new HBox(30);
 		Button depositButton = new Button("Deposit");
-		depositButton.setOnAction(doneEvent -> depositScene(loggedInBalance));	
 		Button withdrawButton = new Button("Withdraw");
-		withdrawButton.setOnAction(doneEvent -> withdrawScene(loggedInBalance));
 		Button transferButton = new Button("eTransfer");
+		//create the deposit scene when deposit button is pressed and withdraw scene when withdraw button is pressed
+		//pass both functions loggedInBalanceLabel so the balance on the card can be updated in the main scene
+		depositButton.setOnAction(doneEvent -> depositSceneCreator(loggedInBalanceLabel));		
+		withdrawButton.setOnAction(doneEvent -> withdrawSceneCreator(loggedInBalanceLabel));
 		buttons.getChildren().addAll(depositButton,withdrawButton,transferButton);
 		
 		//Transfer List
 		VBox transferList = new VBox();
-		Label contacts = new Label ("E-Transfer Contacts");
-		transferList.getChildren().add(contacts);
+		Label contactsTitle = new Label ("E-Transfer Contacts");
+		transferList.getChildren().add(contactsTitle);
 		
 		//create a list to store all the accounts
     	int rowCounter = 0;
-    	while (rowCounter < accounts.size()) {
+    	while (rowCounter < accountsList.size()) {
     		HBox userRow = new HBox();
-           	Label userLabel = new Label("User #" + (rowCounter+1) + ": " + accounts.get(rowCounter).getUsername());  
+           	Label userLabel = new Label("User #" + (rowCounter+1) + ": " + accountsList.get(rowCounter).getUsername());  
            	HBox.setMargin(userLabel, new Insets(0,50,0,50));
         	userRow.getChildren().addAll(userLabel);
         	transferList.getChildren().addAll(userRow);
@@ -301,12 +308,12 @@ public class LoginSceneController{
 		
 		//Transactions List
 		VBox transactionList = new VBox();
-		Label testLabel = new Label ("Transaction History");
-		transactionList.getChildren().addAll(testLabel);
+		Label transactionTitle = new Label ("Transaction History");
+		transactionList.getChildren().addAll(transactionTitle);
 		
 		//add the two lists to an hbox
-		HBox listsBox = new HBox(100);
-		listsBox.getChildren().addAll(transferList,transactionList);
+		HBox listsHBox = new HBox(100);
+		listsHBox.getChildren().addAll(transferList,transactionList);
 		
 		//margins, order is top right bottom left in the (0,0,0,0)
 		VBox.setMargin(forgetErrorLabel, new Insets(10,25,0,85));
@@ -318,17 +325,17 @@ public class LoginSceneController{
 		StackPane.setAlignment(rectangleCard, Pos.TOP_LEFT);
 		StackPane.setAlignment(cardNumber, Pos.BOTTOM_LEFT);
 		StackPane.setAlignment(rectangleCard2, Pos.TOP_LEFT);
-		StackPane.setAlignment(loggedInBalance, Pos.CENTER_LEFT);
+		StackPane.setAlignment(loggedInBalanceLabel, Pos.CENTER_LEFT);
 		
 		//setting the text sizes
 		welcomeLabel.setFont(new Font("Arial",30));
 		cardNumber.setFont(new Font("Arial", 15));
-		contacts.setFont(new Font("Arial", 15));
-		testLabel.setFont(new Font("Arial", 15));
-		loggedInBalance.setFont(new Font("Arial", 25));
-		
-		root.getChildren().addAll(welcomeLabel,rectangleStack,rectangleStack2,buttons,listsBox,forgetErrorLabel);
-		
+		contactsTitle.setFont(new Font("Arial", 15));
+		transactionTitle.setFont(new Font("Arial", 15));
+		loggedInBalanceLabel.setFont(new Font("Arial", 25));
+
+		//add all elements to the scene and set the application stage scene to this new scene
+		root.getChildren().addAll(welcomeLabel,rectangleStack,rectangleStack2,buttons,listsHBox,forgetErrorLabel);	
 		Scene bankScene = new Scene(root,800,500);
 		applicationStage.setScene(bankScene);
 	}
@@ -338,9 +345,9 @@ public class LoginSceneController{
 	/** 
      * Method that creates and changes the scene to the deposit scene when the deposit button is pressed in the main bank scene.
      *  If the done button within this new scene is pressed, the depositOrWithdraw method will be called.
-     * @param loggedInBalance (the label that displays the balance so that it can be updated when the deposit is made)
+     * @param loggedInBalanceLabel (the label that displays the balance so that it can be updated when the deposit is made)
      */
-	private void depositScene(Label loggedInBalance) {
+	private void depositSceneCreator(Label loggedInBalanceLabel) {
 		Scene mainScene = applicationStage.getScene();
 		
 		//create the labels,textfields, and button
@@ -348,20 +355,20 @@ public class LoginSceneController{
 		root.setAlignment(Pos.CENTER);
 		Label amountLabel = new Label("Amount");
 		TextField amountField = new TextField();	
-		Label deposit = new Label("Deposit");
+		Label depositLabel = new Label("Deposit");
 		Label depositErrorLabel = new Label("");
 		Button doneButton = new Button("Done");
-		doneButton.setOnAction(doneEvent -> depositOrWithdraw(amountField.getText(),depositErrorLabel,mainScene,loggedInBalance,"Deposit"));
+		doneButton.setOnAction(doneEvent -> depositOrWithdraw(amountField.getText(),depositErrorLabel,mainScene,loggedInBalanceLabel,"Deposit"));
     		
 		//margins, order is top right bottom left in the (0,0,0,0)
 		VBox.setMargin(amountLabel, new Insets(2,0,0,0));
 		VBox.setMargin(amountField, new Insets(0,150,0,150));	
 		VBox.setMargin(depositErrorLabel, new Insets(10,0,0,0));
 		VBox.setMargin(doneButton, new Insets(10,0,0,0));
-		deposit.setFont(new Font("Arial", 20));
+		depositLabel.setFont(new Font("Arial", 20));
 		
 		//add all elements to the scene and set the application stage scene to this new scene
-		root.getChildren().addAll(deposit,amountLabel,amountField,doneButton,depositErrorLabel);
+		root.getChildren().addAll(depositLabel,amountLabel,amountField,doneButton,depositErrorLabel);
 		Scene depositScene = new Scene(root,450,175);
 		applicationStage.setScene(depositScene);
 	}
@@ -369,30 +376,30 @@ public class LoginSceneController{
 	/** 
      * Method that creates and changes the scene to the withdraw scene when the withdraw button is pressed in the main bank scene.
      *  If the done button within this new scene is pressed, the depositOrWithdraw method will be called.
-     * @param loggedInBalance (the label that displays the balance so that it can be updated when the withdrawal is made)
+     * @param loggedInBalanceLabel (the label that displays the balance so that it can be updated when the withdrawal is made)
      */
-	private void withdrawScene(Label loggedInBalance) {
+	private void withdrawSceneCreator(Label loggedInBalanceLabel) {
 		Scene mainScene = applicationStage.getScene();
 		
 		//create the labels,textfields, and button
 		VBox root = new VBox(5);
 		root.setAlignment(Pos.CENTER);
-		Label withdraw = new Label("Withdraw");
+		Label withdrawLabel = new Label("Withdraw");
 		Label amountLabel = new Label("Amount");
 		TextField amountField = new TextField();	
 		Label withdrawErrorLabel = new Label("");
 		Button doneButton = new Button("Done");
-		doneButton.setOnAction(doneEvent -> depositOrWithdraw(amountField.getText(),withdrawErrorLabel,mainScene,loggedInBalance,"Withdraw"));
+		doneButton.setOnAction(doneEvent -> depositOrWithdraw(amountField.getText(),withdrawErrorLabel,mainScene,loggedInBalanceLabel,"Withdraw"));
     		
 		//margins, order is top right bottom left in the (0,0,0,0)
 		VBox.setMargin(amountLabel, new Insets(2,0,0,0));
 		VBox.setMargin(amountField, new Insets(0,150,0,150));	
 		VBox.setMargin(withdrawErrorLabel, new Insets(10,0,0,0));
 		VBox.setMargin(doneButton, new Insets(10,0,0,0));
-		withdraw.setFont(new Font("Arial", 20));
+		withdrawLabel.setFont(new Font("Arial", 20));
 		
 		//add all elements to the scene and set the application stage scene to this new scene
-		root.getChildren().addAll(withdraw,amountLabel,amountField,doneButton,withdrawErrorLabel);
+		root.getChildren().addAll(withdrawLabel,amountLabel,amountField,doneButton,withdrawErrorLabel);
 		Scene withdrawScene = new Scene(root,450,175);
 		applicationStage.setScene(withdrawScene);
 	}
@@ -406,17 +413,17 @@ public class LoginSceneController{
      * @param amount (string of amount to be deposited into account)
      * @param errorLabel (to show error messages)
      * @param scene (the previous scene to return to when the method is done) 
-     * @param loggedInBalance (label to be updated to show new balance)
+     * @param loggedInBalanceLabel (label to be updated to show new balance)
      * @param identifier (used to determine if depositing or withdrawing) 
      */
-	private void depositOrWithdraw(String amount,Label errorLabel,Scene scene,Label loggedInBalance,String identifier) {
+	private void depositOrWithdraw(String amount,Label errorLabel,Scene scene,Label loggedInBalanceLabel,String identifier) {
 		errorLabel.setText("");
 		//Try to create a new account with the provided details
 		try {
 			if (identifier.equals("Deposit")) loggedInAccount.deposit(amount);
 			if (identifier.equals("Withdraw")) loggedInAccount.withdraw(amount);
 			applicationStage.setScene(scene);	
-			loggedInBalance.setText("$" + Double.toString(loggedInAccount.getBalance()));
+			loggedInBalanceLabel.setText("$" + Double.toString(loggedInAccount.getBalance()));
 			//If an error occurs, the account class will determine why the error has occurred and the account will not be created
 			//Instead, an error message will be displayed.
 		} catch (InvalidBalanceException ige) {
