@@ -255,10 +255,9 @@ public class LoginSceneController{
 	
 	
 	
-	
 	/** 
      * Method called by loginButtonPressed that creates and changes the scene to the main bank scene. 
-     * This method will display the bank card, balance, contacts list, transaction history, and the ability to deposit withdraw or etransfer
+     * This method will display the bank card, balance, contacts list, transaction history, and the ability to deposit withdraw or e-transfer
      */
 	void mainBankScene() {
 		Scene loginScene = applicationStage.getScene();
