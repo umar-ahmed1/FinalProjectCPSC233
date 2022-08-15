@@ -62,7 +62,7 @@ public class LoginSceneController{
 				loggedInAccount = temporaryloginAccount.compareToAllLogins(accountsList);
 				//if it is not null set the scene to the bank scene
 				if (loggedInAccount != null) { 
-					mainBankScene();
+					mainBankSceneCreator();
 				}
 				//else display appropriate error messages
 				else {
@@ -84,7 +84,7 @@ public class LoginSceneController{
      * @param swapToRegisterLayout (pressing the register button in the login screen)
      */
 	@FXML
-	void registerButtonPressedLoginScene(ActionEvent swapToRegisterLayout) throws IOException {	
+	void registerButtonPressed(ActionEvent swapToRegisterLayout) throws IOException {	
 		Scene loginScene = applicationStage.getScene();
 		
 		//create the labels,textfields, and the button
@@ -127,7 +127,7 @@ public class LoginSceneController{
      * @param errorMessage (Label that an error message can be written to)
      * @param identifier //needs to be changed ***
      */
-	void resetField(Scene scene, String newField, String newConfirmField, Label errorMessage,String identifier) {
+	void resetPassword(Scene scene, String newField, String newConfirmField, Label errorMessage,String identifier) {
 		errorMessage.setText("");
 		//if the two fields match, then change the password
 		if (newField.equals(newConfirmField)){
@@ -176,7 +176,7 @@ public class LoginSceneController{
      * @param resetButtonPressed (pressing the forgot password button in the login screen)
      */
 	@FXML
-	void resetPasswordScene(ActionEvent resetButtonPressed) throws IOException{
+	void resetPasswordSceneCreator(ActionEvent resetButtonPressed) throws IOException{
 		Scene loginScene = applicationStage.getScene();
 		
 		//create the labels and the textfields
@@ -190,7 +190,7 @@ public class LoginSceneController{
 		Label forgetErrorLabel = new Label("");
 		//create the button and set it to reset the password
 		Button doneButton = new Button("Done");
-		doneButton.setOnAction(doneEvent -> resetField(loginScene,topField.getText(),botField.getText(),forgetErrorLabel,"Passwords"));
+		doneButton.setOnAction(doneEvent -> resetPassword(loginScene,topField.getText(),botField.getText(),forgetErrorLabel,"Passwords"));
     		
 		//margins, order is top right bottom left in the (0,0,0,0)
 		VBox.setMargin(userLabel, new Insets(2,100,0,100));
@@ -219,7 +219,7 @@ public class LoginSceneController{
      * @param resetButtonPressed (pressing the forgot username button in the login screen)
      */
 	@FXML
-	void resetUsernameScene(ActionEvent resetButtonPressed) throws IOException{
+	void resetUsernameSceneCreator(ActionEvent resetButtonPressed) throws IOException{
 		Scene loginScene = applicationStage.getScene();
 		
     	//create the labels,textfields,buttons
@@ -257,7 +257,7 @@ public class LoginSceneController{
      * Method called by loginButtonPressed that creates and changes the scene to the main bank scene. 
      * This method will display the bank card, balance, contacts list, transaction history, and the ability to deposit withdraw or e-transfer
      */
-	void mainBankScene() {
+	void mainBankSceneCreator() {
 		Scene loginScene = applicationStage.getScene();
 		
 		//create the labels and the textfields
@@ -284,10 +284,12 @@ public class LoginSceneController{
 		Button depositButton = new Button("Deposit");
 		Button withdrawButton = new Button("Withdraw");
 		Button transferButton = new Button("eTransfer");
+		Button logoutButton = new Button ("Logout");
 		//create the deposit scene when deposit button is pressed and withdraw scene when withdraw button is pressed
 		//pass both functions loggedInBalanceLabel so the balance on the card can be updated in the main scene
 		depositButton.setOnAction(doneEvent -> depositSceneCreator(loggedInBalanceLabel));		
 		withdrawButton.setOnAction(doneEvent -> withdrawSceneCreator(loggedInBalanceLabel));
+		logoutButton.setOnAction(doneEvent -> applicationStage.setScene(loginScene));
 		buttons.getChildren().addAll(depositButton,withdrawButton,transferButton);
 		
 		//Transfer List
@@ -335,7 +337,7 @@ public class LoginSceneController{
 		loggedInBalanceLabel.setFont(new Font("Arial", 25));
 
 		//add all elements to the scene and set the application stage scene to this new scene
-		root.getChildren().addAll(welcomeLabel,rectangleStack,rectangleStack2,buttons,listsHBox,forgetErrorLabel);	
+		root.getChildren().addAll(welcomeLabel,rectangleStack,rectangleStack2,buttons,listsHBox,logoutButton,forgetErrorLabel);	
 		Scene bankScene = new Scene(root,800,500);
 		applicationStage.setScene(bankScene);
 	}
