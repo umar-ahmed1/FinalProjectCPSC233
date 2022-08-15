@@ -277,8 +277,9 @@ public class LoginSceneController{
 		//Buttons
 		HBox buttons = new HBox(30);
 		Button depositButton = new Button("Deposit");
-		depositButton.setOnAction(doneEvent -> depositScene(loggedInBalance));
+		depositButton.setOnAction(doneEvent -> depositScene(loggedInBalance));	
 		Button withdrawButton = new Button("Withdraw");
+		withdrawButton.setOnAction(doneEvent -> withdrawScene(loggedInBalance));
 		Button transferButton = new Button("eTransfer");
 		buttons.getChildren().addAll(depositButton,withdrawButton,transferButton);
 		
@@ -336,7 +337,7 @@ public class LoginSceneController{
 
 	/** 
      * Method that creates and changes the scene to the deposit scene when the deposit button is pressed in the main bank scene.
-     *  If the done button within this new scene is pressed, the deposit method will be called.
+     *  If the done button within this new scene is pressed, the depositOrWithdraw method will be called.
      * @param loggedInBalance (the label that displays the balance so that it can be updated when the deposit is made)
      */
 	private void depositScene(Label loggedInBalance) {
@@ -348,7 +349,7 @@ public class LoginSceneController{
 		TextField amountField = new TextField();	
 		Label depositErrorLabel = new Label("");
 		Button doneButton = new Button("Done");
-		doneButton.setOnAction(doneEvent -> deposit(amountField.getText(),depositErrorLabel,mainScene,loggedInBalance));
+		doneButton.setOnAction(doneEvent -> depositOrWithdraw(amountField.getText(),depositErrorLabel,mainScene,loggedInBalance,"Deposit"));
     		
 		//margins, order is top right bottom left in the (0,0,0,0)
 		VBox.setMargin(amountLabel, new Insets(2,100,0,100));
@@ -362,20 +363,52 @@ public class LoginSceneController{
 		applicationStage.setScene(depositScene);
 	}
 
+	/** 
+     * Method that creates and changes the scene to the withdraw scene when the withdraw button is pressed in the main bank scene.
+     *  If the done button within this new scene is pressed, the depositOrWithdraw method will be called.
+     * @param loggedInBalance (the label that displays the balance so that it can be updated when the withdrawal is made)
+     */
+	private void withdrawScene(Label loggedInBalance) {
+		Scene mainScene = applicationStage.getScene();
+		
+		//create the labels,textfields, and button
+		VBox root = new VBox(5);
+		Label amountLabel = new Label("Amount");
+		TextField amountField = new TextField();	
+		Label withdrawErrorLabel = new Label("");
+		Button doneButton = new Button("Done");
+		doneButton.setOnAction(doneEvent -> depositOrWithdraw(amountField.getText(),withdrawErrorLabel,mainScene,loggedInBalance,"Withdraw"));
+    		
+		//margins, order is top right bottom left in the (0,0,0,0)
+		VBox.setMargin(amountLabel, new Insets(2,100,0,100));
+		VBox.setMargin(amountField, new Insets(0,100,0,100));	
+		VBox.setMargin(withdrawErrorLabel, new Insets(10,25,0,25));
+		VBox.setMargin(doneButton, new Insets(10,100,0,175));
+		
+		//add all elements to the scene and set the application stage scene to this new scene
+		root.getChildren().addAll(amountLabel,amountField,doneButton,withdrawErrorLabel);
+		Scene withdrawScene = new Scene(root,450,150);
+		applicationStage.setScene(withdrawScene);
+	}
+	
+	
 
 	/** 
-     * Method that is called when the done button in the deposit scene is pressed. Tries to deposit the amount if all parameters are valid (amount must be a string >= 0 and parsable to a double)
-     * If unable to deposit, displays appropriate error message thrown by the account constructor.
+     * Method that is called when the done button in the deposit or withdraw scene is pressed. 
+     * Tries to deposit/withdraw the amount passed if all parameters are valid (amount must be a string >= 0 and parsable to a double)
+     * If unable to deposit/withdraw, displays appropriate error message thrown by the account constructor.
      * @param amount (string of amount to be deposited into account)
      * @param errorLabel (to show error messages)
      * @param scene (the previous scene to return to when the method is done) 
-     * @param loggedInBalance (label to be updated to show new balance)  
+     * @param loggedInBalance (label to be updated to show new balance)
+     * @param identifier (used to determine if depositing or withdrawing) 
      */
-	private void deposit(String amount,Label errorLabel,Scene scene,Label loggedInBalance) {
+	private void depositOrWithdraw(String amount,Label errorLabel,Scene scene,Label loggedInBalance,String identifier) {
 		errorLabel.setText("");
 		//Try to create a new account with the provided details
 		try {
-			loggedInAccount.deposit(amount);
+			if (identifier.equals("Deposit")) loggedInAccount.deposit(amount);
+			if (identifier.equals("Withdraw")) loggedInAccount.withdraw(amount);
 			applicationStage.setScene(scene);	
 			loggedInBalance.setText("$" + Double.toString(loggedInAccount.getBalance()));
 			//If an error occurs, the account class will determine why the error has occurred and the account will not be created

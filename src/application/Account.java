@@ -110,9 +110,42 @@ public class Account {
 	
 	
 	
-	//public void withdraw(Double amount) {
-		//if (amount <= this.getBalance()) balance -= amount;
-	//}
+	/** 
+     * Method that validates a string input (valid means parsable to double and less than the balance of the account).
+     * If valid, the input is subtracted from the balance.
+     * Otherwise an appropriate error message is displayed
+     * @param amount (to be withdrawn from the account)
+     */
+	public void withdraw(String amount) throws InvalidBalanceException {
+		try {
+			if (Double.parseDouble(amount) <= balance && Double.parseDouble(amount) >=0) balance -= Double.parseDouble(amount);
+			//if the string is greater than max value but its valid throw an exception
+			else throw new InvalidBalanceException("Invalid amount. Entered value is less than 0 or greater than balance.");
+			}
+		//if the string is not able to be to converted to a double throw a number format exception that throws an invalid grade exception
+		catch (NumberFormatException e){
+			//want to figure out why the balance is invalid, so we do some checking here
+			String errorMessage = "";
+			int counter = 0;
+		
+			if (amount.equals("")) {
+				errorMessage = ("Please enter an amount");
+				}
+			for (char c : amount.toCharArray()) {
+	    		if (!Character.isDigit(c)) {
+	    			//If the character is not a decimal point
+	    			if (c != '.') {
+	    				errorMessage = ("Amount should be a number. Don't include char: " + c);
+	    				}
+	    			if (c == '.') counter++;
+	    			if (counter >1) {
+	    				errorMessage = ("Amount should be a number. Don't include multiple decimal points");
+	    				}
+	    			}
+	    		}
+			throw new InvalidBalanceException(errorMessage);
+		}
+	}
 	
 	
 	
