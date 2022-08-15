@@ -270,11 +270,11 @@ public class LoginSceneController{
 		Label welcomeLabel = new Label("Welcome To Your Account: " + loggedInAccount.getUsername());
 		Label loggedInBalance = new Label("$" + loggedInAccount.getBalance());
 		
+		//rectangle and their stack panes. rectangle creation is (x,y,width,height)
 		StackPane rectangleStack = new StackPane();
 		Label cardType = new Label("Chequing");
 		StackPane rectangleStack2 = new StackPane();
 		Label cardNumber = new Label(loggedInAccount.getCardNumber());
-		//rectange x,y,width,height
 		Rectangle rectangleCard = new Rectangle(100,100,250,100);
 		rectangleCard.setFill(Color.rgb(0,151,230));
 		Rectangle rectangleCard2 = new Rectangle(100,250,250,50);
@@ -294,7 +294,8 @@ public class LoginSceneController{
 		VBox transferList = new VBox();
 		Label contacts = new Label ("E-Transfer Contacts");
 		transferList.getChildren().add(contacts);
-		//create a list to store all the quiz grades
+		
+		//create a list to store all the accounts
     	int rowCounter = 0;
     	while (rowCounter < accounts.size()) {
     		HBox userRow = new HBox();
@@ -310,7 +311,7 @@ public class LoginSceneController{
 		Label testLabel = new Label ("Transaction History");
 		transactionList.getChildren().addAll(testLabel);
 		
-		//e
+		//add the two lists to an hbox
 		HBox listsBox = new HBox(100);
 		listsBox.getChildren().addAll(transferList,transactionList);
 		
@@ -326,6 +327,7 @@ public class LoginSceneController{
 		StackPane.setAlignment(rectangleCard2, Pos.TOP_LEFT);
 		StackPane.setAlignment(loggedInBalance, Pos.CENTER_LEFT);
 		
+		//setting the text sizes
 		welcomeLabel.setFont(new Font("Arial",30));
 		cardNumber.setFont(new Font("Arial", 15));
 		contacts.setFont(new Font("Arial", 15));
@@ -348,12 +350,11 @@ public class LoginSceneController{
 	private void depositScene(Label loggedInBalance) {
 		Scene mainScene = applicationStage.getScene();
 		
-		//create the labels and the textfields
+		//create the labels,textfields, and button
 		VBox root = new VBox(5);
 		Label amountLabel = new Label("Amount");
 		TextField amountField = new TextField();	
 		Label depositErrorLabel = new Label("");
-		//create the button and let it have an action on event
 		Button doneButton = new Button("Done");
 		doneButton.setOnAction(doneEvent -> deposit(amountField.getText(),depositErrorLabel,mainScene,loggedInBalance));
     		
@@ -363,8 +364,8 @@ public class LoginSceneController{
 		VBox.setMargin(depositErrorLabel, new Insets(10,25,0,25));
 		VBox.setMargin(doneButton, new Insets(10,100,0,175));
 		
+		//add all elements to the scene and set the application stage scene to this new scene
 		root.getChildren().addAll(amountLabel,amountField,doneButton,depositErrorLabel);
-		
 		Scene depositScene = new Scene(root,450,150);
 		applicationStage.setScene(depositScene);
 	}
@@ -385,12 +386,15 @@ public class LoginSceneController{
 			loggedInAccount.deposit(amount);
 			applicationStage.setScene(scene);	
 			loggedInBalance.setText("$" + Double.toString(loggedInAccount.getBalance()));
-		//If an error occurs, the account class will determine why the error has occured and the account will not be created
-		//Instead, an error message will be displayed which the account constructor has thrown
+			//If an error occurs, the account class will determine why the error has occurred and the account will not be created
+			//Instead, an error message will be displayed.
 		} catch (InvalidBalanceException ige) {
 			errorLabel.setText(ige.getMessage());	
 		}
-		
+
 	}
+	
+	
+	
 	
 }

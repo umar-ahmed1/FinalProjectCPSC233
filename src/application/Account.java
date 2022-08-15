@@ -58,7 +58,10 @@ public class Account {
 			throw new InvalidBalanceException(errorMessage);
 		}
 	}
-	//constructor that just has username password (used for logging in)
+	
+	
+	
+	
 	public Account(String usernameInput, String passwordInput) {
 		username = usernameInput;
 		password = passwordInput;
@@ -125,13 +128,16 @@ public class Account {
 	public String getPassword() {
 		return password;
 	}
+	
 	public void setPassword(String pass) {
 		this.password = pass;
 	}
+	
 	//Getter and setter for username
 	public String getUsername() {
 		return username;
 	}
+	
 	public void setUsername(String user) {
 		this.username = user;
 	}
@@ -139,22 +145,25 @@ public class Account {
 	public Double getBalance() {
 		return balance;
 	}
+	
 	public void setBalance(Double bal){
 		this.balance = bal;
 	}
+	
 	public ArrayList<Account> getSubAccounts(){
 		return subaccounts;
 	}
 	
+	public String getCardNumber() {
+		return Integer.toString(cardNumber);
+	}
 	
-
 	@Override
 	public String toString() {
 		return "username:" + this.getUsername() + " password:" + this.getPassword() + " card no:" + this.cardNumber + " balance:" + this.balance;
 	}
-	public String getCardNumber() {
-		return Integer.toString(cardNumber);
-	}
+	
+	
 	
 
 
