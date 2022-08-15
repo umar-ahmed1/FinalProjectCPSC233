@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class Account {
+	//instance variables
 	private String username;
 	private String password;
 	private Double balance = 0.0;
@@ -12,7 +13,16 @@ public class Account {
 	private ArrayList<Account> subaccounts = new ArrayList<Account>();
 	
 	
-	//Default constructor
+	
+	
+	/** 
+     * Constructor that takes in a username, password, balance, and arraylist. If the account does not have the same username as any one in the arraylist, the account will be created
+     * If the balance input is not valid, an exception will be thrown
+     * @param usernameInput (username to be registered)
+     * @param passwordInput (password to be registered)
+     * @param balanceInput (balance to be validated and registered)
+     * @param accounts (arraylist of accounts check if the username is taken or not)
+     */
 	public Account(String usernameInput, String passwordInput, String balanceInput,ArrayList<Account> accounts) throws InvalidBalanceException {
 		
 		if (!usernameInput.equals("")) username = usernameInput;
@@ -33,7 +43,7 @@ public class Account {
 			if (Double.parseDouble(balanceInput) >=0) balance = Double.parseDouble(balanceInput);
 			//if the string is greater than max value but its valid throw an exception
 			else throw new InvalidBalanceException("Invalid balance. Entered value is less than 0.");
-			}
+		}
 		//if the string is not able to be to converted to a double throw a number format exception that throws an invalid grade exception
 		catch (NumberFormatException e){
 			//want to figure out why the balance is invalid, so we do some checking here
@@ -53,29 +63,44 @@ public class Account {
         			if (counter >1) {
         				errorMessage = ("Balance should be a number. Don't include multiple decimal points");
         				}
-        			}
-        		}
+					}
+				}
 			throw new InvalidBalanceException(errorMessage);
 		}
 	}
 	
 	
 	
-	
+	/** 
+     * Constructor that only takes in a username and password as String inputs, used to confirm if login details are correct since we are only require two parameters for login.
+     * @param usernameInput (username to be registered)
+     * @param passwordInput (password to be registered)
+     */
 	public Account(String usernameInput, String passwordInput) {
 		username = usernameInput;
 		password = passwordInput;
 	}
 	
 
-	//constructor to create a deep copy of another account
+	
+	/** 
+     * Constructor to create a deep copy of another account
+     * @param toCopy (account that needs to be copied)
+     */
 	public Account(Account toCopy) {
 	this.username = toCopy.getUsername();
 	this.password = toCopy.getPassword();
+	this.balance = toCopy.getBalance();
 	}
 	
 	
-	//method to compare given username/pass to all username pass
+	
+	/** 
+     * Method that compares an account to a list of accounts and returns the appropriate account.
+     * @param accounts (arraylist of accounts to be checked)
+     * @return account (the account that has the same username and password as one of the stored accounts)
+     * @return null (if no account matches)
+     */
 	public Account compareToAllLogins(ArrayList<Account> accounts) {
 		for (Account account : accounts) {
 			if (this.getUsername().equals(account.getUsername()) && this.getPassword().equals(account.getPassword())) return account;
@@ -83,10 +108,20 @@ public class Account {
 		return null;
 	}
 	
-	public void withdraw(Double amount) {
-		if (amount <= this.getBalance()) balance -= amount;
-	}
 	
+	
+	//public void withdraw(Double amount) {
+		//if (amount <= this.getBalance()) balance -= amount;
+	//}
+	
+	
+	
+
+	/** 
+     * Method that validates a string input and converts it to a double, then it adds the input to the balance if the input is valid.
+     * Otherwise an appropriate error message is displayed
+     * @param amount (to be deposited into the account)
+     */
 	public void deposit(String amount) throws InvalidBalanceException {
 		try {
 			if (Double.parseDouble(amount) >=0) balance += Double.parseDouble(amount);
@@ -118,46 +153,84 @@ public class Account {
 		}
 	}
 	
+	
+	
 	//public void transfer(String amount, Account transferTo) {
 		//if (amount <= this.getBalance()) transferTo.deposit(amount);
 	//}
 	
 
 	
-	//Getter and setter for password 
+	/** 
+     * Method that gets the encapsulated password
+     * @return password
+     */
 	public String getPassword() {
 		return password;
 	}
 	
+	
+	/**
+	 * Takes a String as input and sets the accounts password to the string.
+	 * @param pass (String that is inputted)
+	 */
 	public void setPassword(String pass) {
 		this.password = pass;
 	}
 	
-	//Getter and setter for username
+	
+	/** 
+     * Method that gets the encapsulated username
+     * @return username
+     */
 	public String getUsername() {
 		return username;
 	}
 	
+	/**
+	 * Takes a String as input and sets the accounts username to the string.
+	 * @param user (String that is inputted)
+	 */
 	public void setUsername(String user) {
 		this.username = user;
 	}
 	
+	/** 
+     * Method that gets the encapsulated balance
+     * @return balance
+     */
 	public Double getBalance() {
 		return balance;
 	}
 	
+	
+	/**
+	 * Takes a double as input and sets the accounts balance to the double.
+	 * @param bal (Double that is inputted)
+	 */
 	public void setBalance(Double bal){
 		this.balance = bal;
 	}
+	
+	
 	
 	public ArrayList<Account> getSubAccounts(){
 		return subaccounts;
 	}
 	
+	
+	/** 
+     * Method that gets the encapsulated cardNumber (randomly generated number between 4520-0000 and 45209999)
+     * @return cardNumber
+     */
 	public String getCardNumber() {
 		return Integer.toString(cardNumber);
 	}
 	
+	
+	/**
+	 * Method that displays all information relating to a bank account (username,password,card number, balance)
+	 */
 	@Override
 	public String toString() {
 		return "username:" + this.getUsername() + " password:" + this.getPassword() + " card no:" + this.cardNumber + " balance:" + this.balance;
