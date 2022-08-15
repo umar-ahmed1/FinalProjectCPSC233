@@ -301,11 +301,14 @@ public class LoginSceneController{
     	int rowCounter = 0;
     	while (rowCounter < accountsList.size()) {
     		HBox userRow = new HBox();
-           	Label userLabel = new Label("User #" + (rowCounter+1) + ": " + accountsList.get(rowCounter).getUsername());  
-           	HBox.setMargin(userLabel, new Insets(0,50,0,50));
-        	userRow.getChildren().addAll(userLabel);
-        	transferList.getChildren().addAll(userRow);
-        	rowCounter++;
+    		if (!accountsList.get(rowCounter).getUsername().equals(loggedInAccount.getUsername())) {
+    			Label userLabel = new Label("User #" + (rowCounter+1) + ": " + accountsList.get(rowCounter).getUsername());  
+    			HBox.setMargin(userLabel, new Insets(0,50,0,50));
+    			userRow.getChildren().addAll(userLabel);
+    			transferList.getChildren().addAll(userRow);
+    			rowCounter++;
+    		}
+    		else rowCounter++;
     	}
 		
 		//Transactions List
@@ -328,6 +331,7 @@ public class LoginSceneController{
 		StackPane.setAlignment(cardNumber, Pos.BOTTOM_LEFT);
 		StackPane.setAlignment(rectangleCard2, Pos.TOP_LEFT);
 		StackPane.setAlignment(loggedInBalanceLabel, Pos.CENTER_LEFT);
+		VBox.setMargin(listsHBox,new Insets(0,0,0,150));
 		
 		//setting the text sizes
 		welcomeLabel.setFont(new Font("Arial",30));
