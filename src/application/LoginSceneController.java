@@ -381,27 +381,29 @@ public class LoginSceneController{
 
 	public void eTransfer(Label loggedInBalanceLabel, String userToTransferTo, Label errorLabel, Scene mainScene,String amount) {
 		errorLabel.setText("");
+		System.out.println("logged user:" + loggedInAccount.getUsername());
 		try {
-			//loop through the users and find if the username given is one of an existing account
+			//loop through the users 
 			for (Account acc : accountsList) {
-				if (userToTransferTo.equals(acc.getUsername())) {
-					//if they didnt put in their own username and put in a valid name, complete the transfer and exit out
-					if (!userToTransferTo.equals(loggedInAccount.getUsername())) {
+				//if you put in your own username then display an error message because you cant transfer to yourself
+				if (userToTransferTo.equals(loggedInAccount.getUsername())) {
+					errorLabel.setText("Cant eTransfer to yourself");
+					break;
+				}
+				//if the username given is not the logged in username and matches some username from the accounts list then transfer
+				if (userToTransferTo.equals(acc.getUsername()) && !userToTransferTo.equals(loggedInAccount.getUsername())) {
+						//complete the transfer and exit out
 						loggedInAccount.transfer(amount,acc);
 						applicationStage.setScene(mainScene);
 						loggedInBalanceLabel.setText("$" + Double.toString(loggedInAccount.getBalance()));
+						break;
 					}
-					//else here would be they put in their own username
+					//else the loop is complete and no user was found
 					else {
-						errorLabel.setText("Can't eTransfer to yourself");
+						errorLabel.setText("User not found");
 					}
 				}
-				//if no account was found
-				else {
-					errorLabel.setText("No account with that username was found");
-				}
-				
-			}
+		
 		//if the amount is invalid string display error
 		} catch (InvalidBalanceException ige) {
 			errorLabel.setText(ige.getMessage());
