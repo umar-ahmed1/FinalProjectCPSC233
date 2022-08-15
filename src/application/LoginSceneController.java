@@ -289,6 +289,7 @@ public class LoginSceneController{
 		//pass both functions loggedInBalanceLabel so the balance on the card can be updated in the main scene
 		depositButton.setOnAction(doneEvent -> depositSceneCreator(loggedInBalanceLabel));		
 		withdrawButton.setOnAction(doneEvent -> withdrawSceneCreator(loggedInBalanceLabel));
+		transferButton.setOnAction(doneEvent -> transferSceneCreator(loggedInBalanceLabel));
 		logoutButton.setOnAction(doneEvent -> applicationStage.setScene(loginScene));
 		buttons.getChildren().addAll(depositButton,withdrawButton,transferButton);
 		
@@ -301,11 +302,13 @@ public class LoginSceneController{
     	int rowCounter = 0;
     	while (rowCounter < accountsList.size()) {
     		HBox userRow = new HBox();
-           	Label userLabel = new Label("User #" + (rowCounter+1) + ": " + accountsList.get(rowCounter).getUsername());  
-           	HBox.setMargin(userLabel, new Insets(0,50,0,50));
-        	userRow.getChildren().addAll(userLabel);
-        	transferList.getChildren().addAll(userRow);
-        	rowCounter++;
+    		if (!accountsList.get(rowCounter).getUsername().equals(loggedInAccount.getUsername())) {
+    			Label userLabel = new Label("User #" + (rowCounter+1) + ": " + accountsList.get(rowCounter).getUsername());  
+    			userRow.getChildren().addAll(userLabel);
+    			transferList.getChildren().addAll(userRow);
+    			rowCounter++;
+    		}
+    		else rowCounter++;
     	}
 		
 		//Transactions List
@@ -328,7 +331,8 @@ public class LoginSceneController{
 		StackPane.setAlignment(cardNumber, Pos.BOTTOM_LEFT);
 		StackPane.setAlignment(rectangleCard2, Pos.TOP_LEFT);
 		StackPane.setAlignment(loggedInBalanceLabel, Pos.CENTER_LEFT);
-		
+		VBox.setMargin(listsHBox,new Insets(50,0,0,50));
+		VBox.setMargin(logoutButton, new Insets(50,0,0,100));
 		//setting the text sizes
 		welcomeLabel.setFont(new Font("Arial",30));
 		cardNumber.setFont(new Font("Arial", 15));
@@ -340,6 +344,83 @@ public class LoginSceneController{
 		root.getChildren().addAll(welcomeLabel,rectangleStack,rectangleStack2,buttons,listsHBox,logoutButton,forgetErrorLabel);	
 		Scene bankScene = new Scene(root,800,500);
 		applicationStage.setScene(bankScene);
+	}
+
+	
+	
+	/** 
+     * Method called by eTransfer button in main bank scene that creates and changes the scene to the transfer. 
+     * This method will ask for a username and amount in textfields and upon the done button being pressed will call the eTransfer method.
+     */
+	private void transferSceneCreator(Label loggedInBalanceLabel) {
+		Scene mainScene = applicationStage.getScene();
+		
+		//create the labels,textfields, and button
+		VBox root = new VBox(5);
+		root.setAlignment(Pos.CENTER);
+		Label userToTransferToLabel = new Label("User To Transfer To");
+		TextField userToTransferToField = new TextField();	
+		Label titleLabel = new Label("eTransfer");
+		Label amountLabel = new Label("Amount");
+		TextField amountField = new TextField();
+		Label transferErrorLabel = new Label("");
+		Button doneButton = new Button("Done");
+		doneButton.setOnAction(doneEvent -> eTransfer(loggedInBalanceLabel,userToTransferToField.getText(),transferErrorLabel,mainScene,amountField.getText()));
+    		
+		//margins, order is top right bottom left in the (0,0,0,0)
+		VBox.setMargin(userToTransferToLabel, new Insets(2,0,0,0));
+		VBox.setMargin(userToTransferToField, new Insets(0,150,0,150));	
+		VBox.setMargin(amountField, new Insets(0,150,0,150));	
+		VBox.setMargin(transferErrorLabel, new Insets(10,0,0,0));
+		VBox.setMargin(doneButton, new Insets(10,0,0,0));
+		titleLabel.setFont(new Font("Arial", 20));
+		
+		//add all elements to the scene and set the application stage scene to this new scene
+		root.getChildren().addAll(titleLabel,userToTransferToLabel,userToTransferToField,amountLabel,amountField,doneButton,transferErrorLabel);
+		Scene transferScene = new Scene(root,450,250);
+		applicationStage.setScene(transferScene);	
+	}
+
+	
+	/** 
+     * Method that is called when the done button in the etransfer scene is pressed. 
+     * Tries to transfer the amount passed to userToTransferTo if all given parameters are valid.
+     * If unable to transfer, displays appropriate error message thrown by the account constructor.
+     * @param loggedInBalanceLabel (label to be updated to show new balance)
+     * @param userToTransferTo (the username of the account that will recieve the transfer
+     * @param errorLabel (to show error messages)
+     * @param mainScene (the previous scene to return to when the method is done) 
+     * @param amount (string of amount to be deposited into account)
+     */
+	public void eTransfer(Label loggedInBalanceLabel, String userToTransferTo, Label errorLabel, Scene mainScene,String amount) {
+		errorLabel.setText("");
+		System.out.println("logged user:" + loggedInAccount.getUsername());
+		try {
+			//loop through the users 
+			for (Account acc : accountsList) {
+				//if you put in your own username then display an error message because you cant transfer to yourself
+				if (userToTransferTo.equals(loggedInAccount.getUsername())) {
+					errorLabel.setText("Cant eTransfer to yourself");
+					break;
+				}
+				//if the username given is not the logged in username and matches some username from the accounts list then transfer
+				if (userToTransferTo.equals(acc.getUsername()) && !userToTransferTo.equals(loggedInAccount.getUsername())) {
+						//complete the transfer and exit out
+						loggedInAccount.transfer(amount,acc);
+						applicationStage.setScene(mainScene);
+						loggedInBalanceLabel.setText("$" + Double.toString(loggedInAccount.getBalance()));
+						break;
+					}
+					//else the loop is complete and no user was found
+					else {
+						errorLabel.setText("User not found");
+					}
+				}
+		
+		//if the amount is invalid string display error
+		} catch (InvalidBalanceException ige) {
+			errorLabel.setText(ige.getMessage());
+		}
 	}
 
 	
@@ -375,6 +456,8 @@ public class LoginSceneController{
 		applicationStage.setScene(depositScene);
 	}
 
+	
+	
 	/** 
      * Method that creates and changes the scene to the withdraw scene when the withdraw button is pressed in the main bank scene.
      *  If the done button within this new scene is pressed, the depositOrWithdraw method will be called.
