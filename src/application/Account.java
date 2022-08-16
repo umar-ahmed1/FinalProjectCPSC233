@@ -7,7 +7,7 @@ public class Account {
 	//instance variables
 	private String username;
 	private String password;
-	private Double balance = 0.0;
+	protected Double balance = 0.0;
 	private Integer cardNumber;
 	Random random = new Random();
 	private ArrayList<Account> subaccounts = new ArrayList<Account>();
