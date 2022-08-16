@@ -124,7 +124,8 @@ public class LoginSceneController{
      * @param scene (the previous scene to return to when the method is done) 
      * @param newField (String obtained from the first textfield)
      * @param newConfirmField (String obtained from the second textfield)
-     * @param errorMessage (Label that an error message can be written to)
+     * @param errorLabel (Label that an error message can be written to)
+     * @param userToResetPasswordFor (the username of the account that needs its password reset, since there are multiple accounts)
      */
 	void resetPassword(Scene scene, String newField, String newConfirmField, Label errorLabel, String userToResetPasswordFor) {
 		errorLabel.setText("");
@@ -276,6 +277,9 @@ public class LoginSceneController{
 		Label forgetErrorLabel = new Label("");
 		Label welcomeLabel = new Label("Welcome To Your Account: " + loggedInAccount.getUsername());
 		Label loggedInBalanceLabel = new Label("$" + loggedInAccount.getBalance());
+		//lists for transactions and transfers
+		VBox transactionList = new VBox();
+		VBox transferList = new VBox();
 		
 		//rectangle and their stack panes. rectangle creation is (x,y,width,height)
 		StackPane rectangleStack = new StackPane();
@@ -297,14 +301,13 @@ public class LoginSceneController{
 		Button logoutButton = new Button ("Logout");
 		//create the deposit scene when deposit button is pressed and withdraw scene when withdraw button is pressed
 		//pass both functions loggedInBalanceLabel so the balance on the card can be updated in the main scene
-		depositButton.setOnAction(doneEvent -> depositSceneCreator(loggedInBalanceLabel));		
-		withdrawButton.setOnAction(doneEvent -> withdrawSceneCreator(loggedInBalanceLabel));
-		transferButton.setOnAction(doneEvent -> transferSceneCreator(loggedInBalanceLabel));
+		depositButton.setOnAction(doneEvent -> depositSceneCreator(loggedInBalanceLabel,transactionList));		
+		withdrawButton.setOnAction(doneEvent -> withdrawSceneCreator(loggedInBalanceLabel,transactionList));
+		transferButton.setOnAction(doneEvent -> transferSceneCreator(loggedInBalanceLabel,transactionList));
 		logoutButton.setOnAction(doneEvent -> applicationStage.setScene(loginScene));
 		buttons.getChildren().addAll(depositButton,withdrawButton,transferButton);
 		
 		//Transfer List
-		VBox transferList = new VBox();
 		Label contactsTitle = new Label ("E-Transfer Contacts");
 		transferList.getChildren().add(contactsTitle);
 		
@@ -322,15 +325,9 @@ public class LoginSceneController{
     	}
 		
 		//Transactions List
-		VBox transactionList = new VBox();
 		Label transactionTitle = new Label ("Latest Transactions");
 		transactionList.getChildren().addAll(transactionTitle);
 		
-		//get the 5 latest transactions and add them to transaction history
-		for (String transac : loggedInAccount.transactionHistory) {
-			Label transacLabel = new Label("1: " + transac);
-			transactionList.getChildren().add(transacLabel);
-		}
 		
 		//add the two lists to an hbox
 		HBox listsHBox = new HBox(100);
@@ -367,8 +364,10 @@ public class LoginSceneController{
 	/** 
      * Method called by eTransfer button in main bank scene that creates and changes the scene to the transfer. 
      * This method will ask for a username and amount in textfields and upon the done button being pressed will call the eTransfer method.
+     * @param loggedInBalanceLabel (label that shows balance that needs to be updated)
+     * @param transactionList (VBox that displays all current transactions on the screen)
      */
-	private void transferSceneCreator(Label loggedInBalanceLabel) {
+	private void transferSceneCreator(Label loggedInBalanceLabel,VBox transactionList) {
 		Scene mainScene = applicationStage.getScene();
 		
 		//create the labels,textfields, and button
@@ -381,7 +380,7 @@ public class LoginSceneController{
 		TextField amountField = new TextField();
 		Label transferErrorLabel = new Label("");
 		Button doneButton = new Button("Done");
-		doneButton.setOnAction(doneEvent -> eTransfer(loggedInBalanceLabel,userToTransferToField.getText(),transferErrorLabel,mainScene,amountField.getText()));
+		doneButton.setOnAction(doneEvent -> eTransfer(loggedInBalanceLabel,userToTransferToField.getText(),transferErrorLabel,mainScene,amountField.getText(),transactionList));
     		
 		//margins, order is top right bottom left in the (0,0,0,0)
 		VBox.setMargin(userToTransferToLabel, new Insets(2,0,0,0));
@@ -407,8 +406,9 @@ public class LoginSceneController{
      * @param errorLabel (to show error messages)
      * @param mainScene (the previous scene to return to when the method is done) 
      * @param amount (string of amount to be deposited into account)
+     * @param transactionList (VBox that displays all current transactions on the screen)
      */
-	public void eTransfer(Label loggedInBalanceLabel, String userToTransferTo, Label errorLabel, Scene mainScene,String amount) {
+	public void eTransfer(Label loggedInBalanceLabel, String userToTransferTo, Label errorLabel, Scene mainScene,String amount,VBox transactionList) {
 		errorLabel.setText("");
 		try {
 			//loop through the users 
@@ -422,7 +422,7 @@ public class LoginSceneController{
 				if (userToTransferTo.equals(acc.getUsername()) && !userToTransferTo.equals(loggedInAccount.getUsername())) {
 						//complete the transfer and exit out
 						loggedInAccount.transfer(amount,acc);
-						loggedInAccount.transactionHistory.add("Sent $" + amount + " to " + userToTransferTo);
+						transactionList.getChildren().addAll(new Label ("Sent $" + amount + " to " + userToTransferTo));
 						applicationStage.setScene(mainScene);
 						loggedInBalanceLabel.setText("$" + Double.toString(loggedInAccount.getBalance()));
 						break;
@@ -445,8 +445,9 @@ public class LoginSceneController{
      * Method that creates and changes the scene to the deposit scene when the deposit button is pressed in the main bank scene.
      *  If the done button within this new scene is pressed, the depositOrWithdraw method will be called.
      * @param loggedInBalanceLabel (the label that displays the balance so that it can be updated when the deposit is made)
+     * @param transactionList (VBox that displays all current transactions on the screen)
      */
-	private void depositSceneCreator(Label loggedInBalanceLabel) {
+	private void depositSceneCreator(Label loggedInBalanceLabel, VBox transactionList) {
 		Scene mainScene = applicationStage.getScene();
 		
 		//create the labels,textfields, and button
@@ -457,7 +458,7 @@ public class LoginSceneController{
 		Label depositLabel = new Label("Deposit");
 		Label depositErrorLabel = new Label("");
 		Button doneButton = new Button("Done");
-		doneButton.setOnAction(doneEvent -> depositOrWithdraw(amountField.getText(),depositErrorLabel,mainScene,loggedInBalanceLabel,"Deposit"));
+		doneButton.setOnAction(doneEvent -> depositOrWithdraw(amountField.getText(),depositErrorLabel,mainScene,loggedInBalanceLabel,"Deposit",transactionList));
     		
 		//margins, order is top right bottom left in the (0,0,0,0)
 		VBox.setMargin(amountLabel, new Insets(2,0,0,0));
@@ -478,8 +479,9 @@ public class LoginSceneController{
      * Method that creates and changes the scene to the withdraw scene when the withdraw button is pressed in the main bank scene.
      *  If the done button within this new scene is pressed, the depositOrWithdraw method will be called.
      * @param loggedInBalanceLabel (the label that displays the balance so that it can be updated when the withdrawal is made)
+     * @param transactionList (VBox that displays all current transactions on the screen)
      */
-	private void withdrawSceneCreator(Label loggedInBalanceLabel) {
+	private void withdrawSceneCreator(Label loggedInBalanceLabel,VBox transactionList) {
 		Scene mainScene = applicationStage.getScene();
 		
 		//create the labels,textfields, and button
@@ -490,7 +492,7 @@ public class LoginSceneController{
 		TextField amountField = new TextField();	
 		Label withdrawErrorLabel = new Label("");
 		Button doneButton = new Button("Done");
-		doneButton.setOnAction(doneEvent -> depositOrWithdraw(amountField.getText(),withdrawErrorLabel,mainScene,loggedInBalanceLabel,"Withdraw"));
+		doneButton.setOnAction(doneEvent -> depositOrWithdraw(amountField.getText(),withdrawErrorLabel,mainScene,loggedInBalanceLabel,"Withdraw",transactionList));
     		
 		//margins, order is top right bottom left in the (0,0,0,0)
 		VBox.setMargin(amountLabel, new Insets(2,0,0,0));
@@ -516,13 +518,20 @@ public class LoginSceneController{
      * @param scene (the previous scene to return to when the method is done) 
      * @param loggedInBalanceLabel (label to be updated to show new balance)
      * @param identifier (used to determine if depositing or withdrawing) 
+     * @param transactionList (VBox that displays all current transactions on the screen)
      */
-	private void depositOrWithdraw(String amount,Label errorLabel,Scene scene,Label loggedInBalanceLabel,String identifier) {
+	private void depositOrWithdraw(String amount,Label errorLabel,Scene scene,Label loggedInBalanceLabel,String identifier,VBox transactionList) {
 		errorLabel.setText("");
 		//Try to create a new account with the provided details
 		try {
-			if (identifier.equals("Deposit")) loggedInAccount.deposit(amount);
-			if (identifier.equals("Withdraw")) loggedInAccount.withdraw(amount);
+			if (identifier.equals("Deposit")) {
+				transactionList.getChildren().addAll(new Label ("Deposited $" + amount));
+				loggedInAccount.deposit(amount);
+			}
+			if (identifier.equals("Withdraw")) {
+				transactionList.getChildren().addAll(new Label ("Withdrawn $" + amount));
+				loggedInAccount.withdraw(amount);
+			}
 			applicationStage.setScene(scene);	
 			loggedInBalanceLabel.setText("$" + Double.toString(loggedInAccount.getBalance()));
 			//If an error occurs, the account class will determine why the error has occurred and the account will not be created
