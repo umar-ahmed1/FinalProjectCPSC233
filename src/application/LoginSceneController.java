@@ -30,7 +30,6 @@ public class LoginSceneController{
 	public Account account;
 	public String errorMessage;
 	public ArrayList<Account> accountsList = new ArrayList<Account>();
-	boolean registerable = true;
 	public Account loggedInAccount;
 	
 	@FXML
@@ -50,7 +49,7 @@ public class LoginSceneController{
      * @param event (login button pressed in the login scene)
      */
 	@FXML
-	void loginButtonPressed(ActionEvent event) {
+	public void loginButtonPressed(ActionEvent event) {
 		loginErrorLabel.setText("");
 		//create an account based off the username and password fields in login, (dont assign it a balance as we are only using it to confirm login details)
 		Account temporaryloginAccount = new Account(usernameLoginField.getText(),passwordLoginField.getText());
@@ -84,7 +83,7 @@ public class LoginSceneController{
      * @param swapToRegisterLayout (pressing the register button in the login screen)
      */
 	@FXML
-	void registerButtonPressed(ActionEvent swapToRegisterLayout) throws IOException {	
+	public void registerButtonPressed(ActionEvent swapToRegisterLayout) throws IOException {	
 		Scene loginScene = applicationStage.getScene();
 		
 		//create the labels,textfields, and the button
@@ -127,7 +126,7 @@ public class LoginSceneController{
      * @param errorLabel (Label that an error message can be written to)
      * @param userToResetPasswordFor (the username of the account that needs its password reset, since there are multiple accounts)
      */
-	void resetPassword(Scene scene, String newField, String newConfirmField, Label errorLabel, String userToResetPasswordFor) {
+	public void resetPassword(Scene scene, String newField, String newConfirmField, Label errorLabel, String userToResetPasswordFor) {
 		errorLabel.setText("");
 		//if the two fields match, then change the password
 		if (newField.equals(newConfirmField)){
@@ -163,7 +162,7 @@ public class LoginSceneController{
      * @param bal (the balance to register) 
      * @param errorLabel (to show error messages)
      */
-	void createAccount(Scene scene, String user, String pass, String bal, Label errorLabel) {
+	public void createAccount(Scene scene, String user, String pass, String bal, Label errorLabel) {
 		errorLabel.setText("");
 		//Try to create a new account with the provided details
 		try {
@@ -187,7 +186,7 @@ public class LoginSceneController{
      * @param resetButtonPressed (pressing the forgot password button in the login screen)
      */
 	@FXML
-	void resetPasswordSceneCreator(ActionEvent resetButtonPressed) throws IOException{
+	public void resetPasswordSceneCreator(ActionEvent resetButtonPressed) throws IOException{
 		Scene loginScene = applicationStage.getScene();
 		
 		//create the labels and the textfields
@@ -230,7 +229,7 @@ public class LoginSceneController{
      * @param resetButtonPressed (pressing the forgot username button in the login screen)
      */
 	@FXML
-	void resetUsernameSceneCreator(ActionEvent resetButtonPressed) throws IOException{
+	public void resetUsernameSceneCreator(ActionEvent resetButtonPressed) throws IOException{
 		Scene loginScene = applicationStage.getScene();
 		
     	//create the labels,textfields,buttons
@@ -268,7 +267,7 @@ public class LoginSceneController{
      * Method called by loginButtonPressed that creates and changes the scene to the main bank scene. 
      * This method will display the bank card, balance, contacts list, transaction history, and the ability to deposit withdraw or e-transfer
      */
-	void mainBankSceneCreator() {
+	public void mainBankSceneCreator() {
 		Scene loginScene = applicationStage.getScene();
 		
 		//create the labels and the textfields
@@ -280,21 +279,24 @@ public class LoginSceneController{
 		//lists for transactions and transfers
 		VBox transactionList = new VBox();
 		VBox transferList = new VBox();
+		VBox cardStacks = new VBox();
+		HBox cardAndLists = new HBox();
 		
 		//rectangle and their stack panes. rectangle creation is (x,y,width,height)
 		StackPane rectangleStack = new StackPane();
 		Label cardType = new Label("Chequing");
 		StackPane rectangleStack2 = new StackPane();
 		Label cardNumber = new Label(loggedInAccount.getCardNumber());
-		Rectangle rectangleCard = new Rectangle(100,100,250,100);
+		Rectangle rectangleCard = new Rectangle(100,100,300,100);
 		rectangleCard.setFill(Color.rgb(0,151,230));
-		Rectangle rectangleCard2 = new Rectangle(100,250,250,50);
+		Rectangle rectangleCard2 = new Rectangle(100,250,300,50);
 		rectangleCard2.setFill(Color.rgb(151,230,255));
 		rectangleStack.getChildren().addAll(rectangleCard,cardType,loggedInBalanceLabel);
 		rectangleStack2.getChildren().addAll(rectangleCard2,cardNumber);
+		cardStacks.getChildren().addAll(rectangleStack,rectangleStack2);
 		
 		//Buttons
-		HBox buttons = new HBox(30);
+		HBox buttons = new HBox(10);
 		Button depositButton = new Button("Deposit");
 		Button withdrawButton = new Button("Withdraw");
 		Button transferButton = new Button("eTransfer");
@@ -306,6 +308,7 @@ public class LoginSceneController{
 		transferButton.setOnAction(doneEvent -> transferSceneCreator(loggedInBalanceLabel,transactionList));
 		logoutButton.setOnAction(doneEvent -> applicationStage.setScene(loginScene));
 		buttons.getChildren().addAll(depositButton,withdrawButton,transferButton);
+		cardStacks.getChildren().addAll(buttons);
 		
 		//Transfer List
 		Label contactsTitle = new Label ("E-Transfer Contacts");
@@ -332,6 +335,7 @@ public class LoginSceneController{
 		//add the two lists to an hbox
 		HBox listsHBox = new HBox(100);
 		listsHBox.getChildren().addAll(transferList,transactionList);
+		cardAndLists.getChildren().addAll(cardStacks,listsHBox);
 		
 		//margins, order is top right bottom left in the (0,0,0,0)
 		VBox.setMargin(forgetErrorLabel, new Insets(10,25,0,85));
@@ -339,6 +343,7 @@ public class LoginSceneController{
 		VBox.setMargin(rectangleStack,new Insets(25,0,0,50));
 		VBox.setMargin(welcomeLabel,new Insets(0,0,0,0));
 		VBox.setMargin(buttons,new Insets(0,0,0,50));
+		HBox.setMargin(listsHBox,new Insets(25,0,0,50));
 		StackPane.setAlignment(cardType, Pos.TOP_LEFT);
 		StackPane.setAlignment(rectangleCard, Pos.TOP_LEFT);
 		StackPane.setAlignment(cardNumber, Pos.BOTTOM_LEFT);
@@ -352,9 +357,10 @@ public class LoginSceneController{
 		contactsTitle.setFont(new Font("Arial", 15));
 		transactionTitle.setFont(new Font("Arial", 15));
 		loggedInBalanceLabel.setFont(new Font("Arial", 25));
+		cardType.setFont(new Font("Arial",15));
 
 		//add all elements to the scene and set the application stage scene to this new scene
-		root.getChildren().addAll(welcomeLabel,rectangleStack,rectangleStack2,buttons,listsHBox,logoutButton,forgetErrorLabel);	
+		root.getChildren().addAll(welcomeLabel,cardAndLists);	
 		Scene bankScene = new Scene(root,800,500);
 		applicationStage.setScene(bankScene);
 	}
@@ -367,7 +373,7 @@ public class LoginSceneController{
      * @param loggedInBalanceLabel (label that shows balance that needs to be updated)
      * @param transactionList (VBox that displays all current transactions on the screen)
      */
-	private void transferSceneCreator(Label loggedInBalanceLabel,VBox transactionList) {
+	public void transferSceneCreator(Label loggedInBalanceLabel,VBox transactionList) {
 		Scene mainScene = applicationStage.getScene();
 		
 		//create the labels,textfields, and button
