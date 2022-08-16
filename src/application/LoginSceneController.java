@@ -95,8 +95,12 @@ public class LoginSceneController{
 		TextField balField = new TextField();
 		Label balLabel = new Label("Initial deposit");
 		Label errorLabel = new Label("");
+		errorLabel.setTextFill(Color.RED);
+		Label typeLabel = new Label("Type of Account");
+		Label typeLabel2 = new Label("(\"Investment\") or (\"Debit\")");
+		TextField typeField = new TextField();
 		Button doneButton = new Button("Done");
-		doneButton.setOnAction(doneEvent -> createAccount(loginScene, userField.getText(),passField.getText(),balField.getText(),errorLabel));
+		doneButton.setOnAction(doneEvent -> createAccount(loginScene, userField.getText(),passField.getText(),balField.getText(),errorLabel,typeField.getText()));
     	
 		//margins, order is top right bottom left in the (0,0,0,0)
 		VBox.setMargin(userLabel, new Insets(10,100,0,100));
@@ -105,12 +109,15 @@ public class LoginSceneController{
 		VBox.setMargin(passField, new Insets(0,100,0,100));
 		VBox.setMargin(balLabel, new Insets(10,100,0,100));
 		VBox.setMargin(balField, new Insets(0,100,0,100));
+		VBox.setMargin(typeLabel, new Insets(10,100,0,100));
+		VBox.setMargin(typeLabel2, new Insets(0,100,0,100));
+		VBox.setMargin(typeField, new Insets(0,100,0,100));
 		VBox.setMargin(errorLabel, new Insets(10,10,0,25));
 		VBox.setMargin(doneButton, new Insets(10,100,0,175));
 		
 		//add elements to root and create and set the scene to the new scene
-		root.getChildren().addAll(userLabel,userField,passLabel,passField,balLabel,balField,errorLabel,doneButton);
-		Scene resetScene = new Scene(root,400,300);	
+		root.getChildren().addAll(userLabel,userField,passLabel,passField,balLabel,balField,typeLabel,typeLabel2,typeField,errorLabel,doneButton);
+		Scene resetScene = new Scene(root,400,400);	
 		applicationStage.setScene(resetScene);	
 	}
 	
@@ -162,13 +169,24 @@ public class LoginSceneController{
      * @param bal (the balance to register) 
      * @param errorLabel (to show error messages)
      */
-	public void createAccount(Scene scene, String user, String pass, String bal, Label errorLabel) {
+	public void createAccount(Scene scene, String user, String pass, String bal, Label errorLabel,String accountType) {
 		errorLabel.setText("");
 		//Try to create a new account with the provided details
 		try {
-			account = new Account(user,pass,bal,accountsList);
+			if (accountType.equals("Investment")){
+			account = new InvestingAccount(user,pass,bal,accountsList);
 			accountsList.add(account);
 			applicationStage.setScene(scene);	
+			}
+			if (accountType.equals("Debit")){
+				account = new Account(user,pass,bal,accountsList);
+				accountsList.add(account);
+				applicationStage.setScene(scene);	
+				}
+			else {
+				errorLabel.setText("Account type invalid. Try again");
+			}
+			
 		//If an error occurs, the account class will determine why the error has occured and the account will not be created
 		//Instead, an error message will be displayed which the account constructor has thrown
 		} catch (InvalidBalanceException ige) {
@@ -198,6 +216,7 @@ public class LoginSceneController{
 		TextField botField = new TextField();
 		Label botLabel = new Label("Confirm Password");
 		Label forgetErrorLabel = new Label("");
+		forgetErrorLabel.setTextFill(Color.RED);
 		//create the button and set it to reset the password
 		Button doneButton = new Button("Done");
 		doneButton.setOnAction(doneEvent -> resetPassword(loginScene,topField.getText(),botField.getText(),forgetErrorLabel,userField.getText()));
@@ -265,7 +284,7 @@ public class LoginSceneController{
 	
 	/** 
      * Method called by loginButtonPressed that creates and changes the scene to the main bank scene. 
-     * This method will display the bank card, balance, contacts list, transaction history, and the ability to deposit withdraw or e-transfer
+     * This method will display the bank card, balance, contacts list, transaction history, and the ability to deposit withdraw,etransfer, and if its an investment account then invest button.
      */
 	public void mainBankSceneCreator() {
 		Scene loginScene = applicationStage.getScene();
@@ -300,15 +319,20 @@ public class LoginSceneController{
 		Button depositButton = new Button("Deposit");
 		Button withdrawButton = new Button("Withdraw");
 		Button transferButton = new Button("eTransfer");
+		Button investButton = new Button("Invest");
+		//only if its an instance of InvestingAccount should it be visible
+		if (loggedInAccount instanceof InvestingAccount) investButton.setVisible(true);
+		else investButton.setVisible(false);
 		Button logoutButton = new Button ("Logout");
 		//create the deposit scene when deposit button is pressed and withdraw scene when withdraw button is pressed
 		//pass both functions loggedInBalanceLabel so the balance on the card can be updated in the main scene
 		depositButton.setOnAction(doneEvent -> depositSceneCreator(loggedInBalanceLabel,transactionList));		
 		withdrawButton.setOnAction(doneEvent -> withdrawSceneCreator(loggedInBalanceLabel,transactionList));
 		transferButton.setOnAction(doneEvent -> transferSceneCreator(loggedInBalanceLabel,transactionList));
+		investButton.setOnAction(doneEvent-> investSceneCreator(loggedInBalanceLabel,transactionList));
 		logoutButton.setOnAction(doneEvent -> applicationStage.setScene(loginScene));
-		buttons.getChildren().addAll(depositButton,withdrawButton,transferButton);
-		cardStacks.getChildren().addAll(buttons);
+		buttons.getChildren().addAll(depositButton,withdrawButton,transferButton,investButton);
+		cardStacks.getChildren().addAll(buttons,logoutButton);
 		
 		//Transfer List
 		Label contactsTitle = new Label ("E-Transfer Contacts");
@@ -350,7 +374,7 @@ public class LoginSceneController{
 		StackPane.setAlignment(rectangleCard2, Pos.TOP_LEFT);
 		StackPane.setAlignment(loggedInBalanceLabel, Pos.CENTER_LEFT);
 		VBox.setMargin(listsHBox,new Insets(50,0,0,50));
-		VBox.setMargin(logoutButton, new Insets(75,0,0,-50));
+		VBox.setMargin(logoutButton, new Insets(75,0,0,150));
 		//setting the text sizes
 		welcomeLabel.setFont(new Font("Arial",30));
 		cardNumber.setFont(new Font("Arial", 15));
@@ -360,11 +384,13 @@ public class LoginSceneController{
 		cardType.setFont(new Font("Arial",15));
 
 		//add all elements to the scene and set the application stage scene to this new scene
-		root.getChildren().addAll(welcomeLabel,cardAndLists,logoutButton);	
-		Scene bankScene = new Scene(root,800,500);
+		root.getChildren().addAll(welcomeLabel,cardAndLists);	
+		Scene bankScene = new Scene(root,800,400);
 		applicationStage.setScene(bankScene);
 	}
 
+	
+	
 	
 	
 	/** 
@@ -385,6 +411,7 @@ public class LoginSceneController{
 		Label amountLabel = new Label("Amount");
 		TextField amountField = new TextField();
 		Label transferErrorLabel = new Label("");
+		transferErrorLabel.setTextFill(Color.RED);
 		Button doneButton = new Button("Done");
 		doneButton.setOnAction(doneEvent -> eTransfer(loggedInBalanceLabel,userToTransferToField.getText(),transferErrorLabel,mainScene,amountField.getText(),transactionList));
     		
@@ -463,6 +490,7 @@ public class LoginSceneController{
 		TextField amountField = new TextField();	
 		Label depositLabel = new Label("Deposit");
 		Label depositErrorLabel = new Label("");
+		depositErrorLabel.setTextFill(Color.RED);
 		Button doneButton = new Button("Done");
 		doneButton.setOnAction(doneEvent -> depositOrWithdraw(amountField.getText(),depositErrorLabel,mainScene,loggedInBalanceLabel,"Deposit",transactionList));
     		
@@ -497,6 +525,7 @@ public class LoginSceneController{
 		Label amountLabel = new Label("Amount");
 		TextField amountField = new TextField();	
 		Label withdrawErrorLabel = new Label("");
+		withdrawErrorLabel.setTextFill(Color.RED);
 		Button doneButton = new Button("Done");
 		doneButton.setOnAction(doneEvent -> depositOrWithdraw(amountField.getText(),withdrawErrorLabel,mainScene,loggedInBalanceLabel,"Withdraw",transactionList));
     		
@@ -549,6 +578,70 @@ public class LoginSceneController{
 	}
 	
 	
+	
+	/** 
+     * Method called by invest button in main bank scene that creates and changes the scene to the invest scene if the account is investment account. 
+     * This method will ask for a amount in textfields and upon the done button being pressed will call the investCalculator method.
+     * @param loggedInBalanceLabel (label that shows balance that needs to be updated)
+     * @param transactionList (VBox that displays all current transactions on the screen)
+     */
+	public void investSceneCreator(Label loggedInBalanceLabel,VBox transactionList) {
+		Scene mainScene = applicationStage.getScene();
+		
+		//create the labels,textfields, and button
+		VBox root = new VBox(5);
+		root.setAlignment(Pos.CENTER);
+		Label titleLabel = new Label("Investment Center");
+		Label amountLabel = new Label("Amount");
+		Label warningLabel = new Label("Investments work by taking a random number between 0-2");
+		warningLabel.setTextFill(Color.RED);
+		Label warningLabel2 = new Label("and multiplying your amount by that number. Proceed with caution");
+		warningLabel2.setTextFill(Color.RED);
+		TextField amountField = new TextField();
+		Label transferErrorLabel = new Label("");
+		Button doneButton = new Button("Done");
+		doneButton.setOnAction(doneEvent -> investCalculator(amountField.getText(),transferErrorLabel,mainScene,loggedInBalanceLabel,transactionList));
+    	
+		//margins, order is top right bottom left in the (0,0,0,0)
+		VBox.setMargin(amountField, new Insets(10,150,0,150));
+		VBox.setMargin(amountLabel, new Insets(15,0,0,0));
+		VBox.setMargin(transferErrorLabel, new Insets(10,0,0,0));
+		VBox.setMargin(warningLabel, new Insets(10,0,0,0));
+		VBox.setMargin(doneButton, new Insets(10,0,0,0));
+		titleLabel.setFont(new Font("Arial", 20));
+		
+		//add all elements to the scene and set the application stage scene to this new scene
+		root.getChildren().addAll(titleLabel,warningLabel,warningLabel2,amountLabel,amountField,doneButton,transferErrorLabel);
+		Scene transferScene = new Scene(root,450,275);
+		applicationStage.setScene(transferScene);	
+	}
+	
+	/** 
+     * Method that is called when the done button is pressed in the investment scene
+     * Tries to call the InvestingAccount invest method and updates the account balance accordingly.
+     * If unable, displays appropriate error message thrown by the account constructor.
+     * @param amount (string of amount to be invested into account)
+     * @param errorLabel (to show error messages)
+     * @param scene (the previous scene to return to when the method is done) 
+     * @param loggedInBalanceLabel (label to be updated to show new balance)
+     * @param transactionList (VBox that displays all current transactions on the screen)
+     */
+	private void investCalculator(String amount,Label errorLabel,Scene scene,Label loggedInBalanceLabel,VBox transactionList) {
+		errorLabel.setText("");
+		//Try to create a new account with the provided details
+		try {
+			//we cast here because we are 100% sure that this button will only be clicked from an investing account
+			((InvestingAccount) loggedInAccount).invest(amount);
+			applicationStage.setScene(scene);
+			loggedInBalanceLabel.setText("$" + Double.toString(loggedInAccount.getBalance()));
+			transactionList.getChildren().addAll(new Label ("Invested $" + amount));
+			//If an error occurs, the account class will determine why the error has occurred and the account will not be created
+			//Instead, an error message will be displayed.
+		} catch (InvalidBalanceException ige) {
+			errorLabel.setText(ige.getMessage());	
+		}
+
+	}
 	
 	
 }
