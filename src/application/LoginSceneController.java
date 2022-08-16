@@ -350,7 +350,7 @@ public class LoginSceneController{
 		StackPane.setAlignment(rectangleCard2, Pos.TOP_LEFT);
 		StackPane.setAlignment(loggedInBalanceLabel, Pos.CENTER_LEFT);
 		VBox.setMargin(listsHBox,new Insets(50,0,0,50));
-		VBox.setMargin(logoutButton, new Insets(50,0,0,100));
+		VBox.setMargin(logoutButton, new Insets(75,0,0,-50));
 		//setting the text sizes
 		welcomeLabel.setFont(new Font("Arial",30));
 		cardNumber.setFont(new Font("Arial", 15));
@@ -360,7 +360,7 @@ public class LoginSceneController{
 		cardType.setFont(new Font("Arial",15));
 
 		//add all elements to the scene and set the application stage scene to this new scene
-		root.getChildren().addAll(welcomeLabel,cardAndLists);	
+		root.getChildren().addAll(welcomeLabel,cardAndLists,logoutButton);	
 		Scene bankScene = new Scene(root,800,500);
 		applicationStage.setScene(bankScene);
 	}
