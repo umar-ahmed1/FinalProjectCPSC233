@@ -525,12 +525,12 @@ public class LoginSceneController{
 		//Try to create a new account with the provided details
 		try {
 			if (identifier.equals("Deposit")) {
-				transactionList.getChildren().addAll(new Label ("Deposited $" + amount));
 				loggedInAccount.deposit(amount);
+				transactionList.getChildren().addAll(new Label ("Deposited $" + amount));
 			}
 			if (identifier.equals("Withdraw")) {
-				transactionList.getChildren().addAll(new Label ("Withdrawn $" + amount));
 				loggedInAccount.withdraw(amount);
+				transactionList.getChildren().addAll(new Label ("Withdrawn $" + amount));
 			}
 			applicationStage.setScene(scene);	
 			loggedInBalanceLabel.setText("$" + Double.toString(loggedInAccount.getBalance()));
