@@ -11,6 +11,7 @@ public class Account {
 	private Integer cardNumber;
 	Random random = new Random();
 	private ArrayList<Account> subaccounts = new ArrayList<Account>();
+	public ArrayList<String> transactionHistory = new ArrayList<String>(5);
 	
 	
 	

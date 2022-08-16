@@ -125,20 +125,30 @@ public class LoginSceneController{
      * @param newField (String obtained from the first textfield)
      * @param newConfirmField (String obtained from the second textfield)
      * @param errorMessage (Label that an error message can be written to)
-     * @param identifier //needs to be changed ***
      */
-	void resetPassword(Scene scene, String newField, String newConfirmField, Label errorMessage,String identifier) {
-		errorMessage.setText("");
+	void resetPassword(Scene scene, String newField, String newConfirmField, Label errorLabel, String userToResetPasswordFor) {
+		errorLabel.setText("");
 		//if the two fields match, then change the password
 		if (newField.equals(newConfirmField)){
-			if (identifier.equals("Usernames")) this.account.setUsername(newField);
-			if (identifier.equals("Passwords")) this.account.setPassword(newField);
-			applicationStage.setScene(scene);
+			//loop through the users 
+			for (Account acc : accountsList) {
+				//if the username given is equal to any registerd username, reset the password for that username
+				if (userToResetPasswordFor.equals(acc.getUsername())) {
+						acc.setPassword(newField);
+						//complete the transfer and exit out
+						applicationStage.setScene(scene);
+						break;
+					}
+					//else the loop is complete and no user was found
+					else {
+						errorLabel.setText("User not found");
+					}
+			}
 		}
 		//if any of the fields are blank then set an appropriate error message
-		else if (newField.equals("") || newConfirmField.equals("")) errorMessage.setText("Error. One or more of the fields are blank");
+		else if (newField.equals("") || newConfirmField.equals("")) errorLabel.setText("Error. One or more of the fields are blank");
 		//if the two fields do not match, then set an appropriate error message
-		else if (!newField.equals(newConfirmField)) errorMessage.setText(identifier + " do not match. Please try again");
+		else if (!newField.equals(newConfirmField)) errorLabel.setText("Passwords do not match. Please try again");
 	}
 	
 	
@@ -190,7 +200,7 @@ public class LoginSceneController{
 		Label forgetErrorLabel = new Label("");
 		//create the button and set it to reset the password
 		Button doneButton = new Button("Done");
-		doneButton.setOnAction(doneEvent -> resetPassword(loginScene,topField.getText(),botField.getText(),forgetErrorLabel,"Passwords"));
+		doneButton.setOnAction(doneEvent -> resetPassword(loginScene,topField.getText(),botField.getText(),forgetErrorLabel,userField.getText()));
     		
 		//margins, order is top right bottom left in the (0,0,0,0)
 		VBox.setMargin(userLabel, new Insets(2,100,0,100));
@@ -298,7 +308,7 @@ public class LoginSceneController{
 		Label contactsTitle = new Label ("E-Transfer Contacts");
 		transferList.getChildren().add(contactsTitle);
 		
-		//create a list to store all the accounts
+		//create a list to store all the accounts usernames (e transfer contacts)
     	int rowCounter = 0;
     	while (rowCounter < accountsList.size()) {
     		HBox userRow = new HBox();
@@ -313,8 +323,14 @@ public class LoginSceneController{
 		
 		//Transactions List
 		VBox transactionList = new VBox();
-		Label transactionTitle = new Label ("Transaction History");
+		Label transactionTitle = new Label ("Latest Transactions");
 		transactionList.getChildren().addAll(transactionTitle);
+		
+		//get the 5 latest transactions and add them to transaction history
+		for (String transac : loggedInAccount.transactionHistory) {
+			Label transacLabel = new Label("1: " + transac);
+			transactionList.getChildren().add(transacLabel);
+		}
 		
 		//add the two lists to an hbox
 		HBox listsHBox = new HBox(100);
@@ -394,7 +410,6 @@ public class LoginSceneController{
      */
 	public void eTransfer(Label loggedInBalanceLabel, String userToTransferTo, Label errorLabel, Scene mainScene,String amount) {
 		errorLabel.setText("");
-		System.out.println("logged user:" + loggedInAccount.getUsername());
 		try {
 			//loop through the users 
 			for (Account acc : accountsList) {
@@ -407,6 +422,7 @@ public class LoginSceneController{
 				if (userToTransferTo.equals(acc.getUsername()) && !userToTransferTo.equals(loggedInAccount.getUsername())) {
 						//complete the transfer and exit out
 						loggedInAccount.transfer(amount,acc);
+						loggedInAccount.transactionHistory.add("Sent $" + amount + " to " + userToTransferTo);
 						applicationStage.setScene(mainScene);
 						loggedInBalanceLabel.setText("$" + Double.toString(loggedInAccount.getBalance()));
 						break;
