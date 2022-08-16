@@ -413,7 +413,9 @@ public class LoginSceneController{
 		Label transferErrorLabel = new Label("");
 		transferErrorLabel.setTextFill(Color.RED);
 		Button doneButton = new Button("Done");
+		Button exitButton = new Button("Exit");
 		doneButton.setOnAction(doneEvent -> eTransfer(loggedInBalanceLabel,userToTransferToField.getText(),transferErrorLabel,mainScene,amountField.getText(),transactionList));
+		exitButton.setOnAction(doneEvent ->applicationStage.setScene(mainScene));
     		
 		//margins, order is top right bottom left in the (0,0,0,0)
 		VBox.setMargin(userToTransferToLabel, new Insets(2,0,0,0));
@@ -424,8 +426,8 @@ public class LoginSceneController{
 		titleLabel.setFont(new Font("Arial", 20));
 		
 		//add all elements to the scene and set the application stage scene to this new scene
-		root.getChildren().addAll(titleLabel,userToTransferToLabel,userToTransferToField,amountLabel,amountField,doneButton,transferErrorLabel);
-		Scene transferScene = new Scene(root,450,250);
+		root.getChildren().addAll(titleLabel,userToTransferToLabel,userToTransferToField,amountLabel,amountField,doneButton,exitButton,transferErrorLabel);
+		Scene transferScene = new Scene(root,450,300);
 		applicationStage.setScene(transferScene);	
 	}
 
